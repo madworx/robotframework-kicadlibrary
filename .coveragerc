@@ -1,0 +1,6 @@
+[run]
+omit = src/KiCadLibrary/kicad_library_utils/*
+data_file = build/.coverage
+
+[html]
+directory = build/htmlcov
