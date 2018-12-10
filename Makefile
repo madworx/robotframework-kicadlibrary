@@ -1,9 +1,6 @@
 all: tests doc
 
 setup:
-	touch src/KiCadLibrary/kicad_library_utils/__init__.py          \
-			src/KiCadLibrary/kicad_library_utils/sch/__init__.py     \
-			src/KiCadLibrary/kicad_library_utils/schlib/__init__.py 
 
 tests: setup
 	python setup.py test

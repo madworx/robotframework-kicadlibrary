@@ -1,0 +1,3 @@
+[submodule "src/KiCadLibrary/kicad-library-utils"]
+	path = src/KiCadLibrary/kicad_library_utils
+	url = git@github.com:madworx/kicad-library-utils.git
