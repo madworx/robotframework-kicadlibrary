@@ -1,0 +1,26 @@
+language: python
+
+sudo: required
+
+before_install:
+  - make setup
+  
+install:
+  - make tests
+
+script:
+  - make dist doc
+
+deploy:
+  provider: releases
+  api_key:
+    secure: asdfsadfsfdsaf
+  file_glob: true
+  file:
+    - build/KicadLibrary.html
+    - dist/robotframework*
+  skip_cleanup: true
+  overwrite: true
+  on:
+    repo: madworx/robotframework-kicadlibrary
+    tags: true
