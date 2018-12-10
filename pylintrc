@@ -1,7 +1,4 @@
 [MASTER]
-ignore=
-   src/KiCadLibrary/kicad_library_utils
-   src/KiCadLibrary/__init__.py
 persistent=yes
 jobs=1
 disable=
