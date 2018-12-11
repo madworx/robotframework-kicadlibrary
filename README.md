@@ -4,7 +4,7 @@
 
 A [Robot Framework](http://robotframework.org/) library for validating [KiCad](https://kicad.github.io/) designs.
 
-Releases are available via [GitHib releases](https://github.com/madworx/robotframework-kicadlibrary/releases).
+Releases are available via regular [PyPI](https://pypi.org/project/robotframework-kicadlibrary/) as well as [GitHib releases](https://github.com/madworx/robotframework-kicadlibrary/releases).
 
 ## Author
 Martin Kjellstrand <martin.kjellstrand@madworx.se>
