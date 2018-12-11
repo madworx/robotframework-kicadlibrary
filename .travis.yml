@@ -2,6 +2,10 @@ language: python
 
 dist: xenial
 
+addons:
+  sonarcloud:
+    organization: "madworx"
+
 python: 2.7
 
 virtualenv:
@@ -15,10 +19,9 @@ before_install:
    - sudo apt install --assume-yes kicad kicad-symbols kicad-footprints
    - make setup
 
-install:
-   - make tests
-
 script:
+   - make tests
+   - sonar-scanner
    - make dist
    - make doc
 
@@ -36,4 +39,3 @@ deploy:
       repo: madworx/robotframework-kicadlibrary
       tags: true
       all_branches: true
-
