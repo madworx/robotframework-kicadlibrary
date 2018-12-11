@@ -21,7 +21,8 @@ before_install:
 
 script:
   - make tests
-  - sonar-scanner
+  - export TAGGED_VERSION=$(git describe --exact-match HEAD 2>/dev/null)
+  - sonar-scanner $([[ ! -z "${TAGGED_VERSION}" ]] && echo "-Dversion=${TAGGED_VERSION}")
   - make dist
   - make doc
 
