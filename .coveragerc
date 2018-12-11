@@ -4,3 +4,6 @@ data_file = build/.coverage
 
 [html]
 directory = build/htmlcov
+
+[xml]
+output = build/coverage.xml
