@@ -1,0 +1,31 @@
+
+        # For  some components,  a reference  will be  assigned inside
+        # Eeschema GUI  ("U31" for  74LS04). However, if  sub-unit "G"
+        # hasn't  been  set, they  will  have  the name "U?"  in  the
+        # eeschema file,  and no  reference to  U31 will  be recorded.
+        # The solution to that is to  add the "G" unit, then they will
+        # be  named  U31  in  the  eeschema  file.   We'll  need  some
+        # validation for this, and a descriptive error message.
+
+        # For some  components, the  'comp.labels' field  reports 'U?'
+        # component references.  Possibly due to older copy-paste:ing?
+        # However, the later comp.fields have the correct information.
+
+        #for schema_name in self.schemas:
+        #    for component in self.schemas[schema_name].components:
+        #        component_type      = component.labels['name']
+        #        component_reference = component.fields[0]['ref']
+        #        component_footprint = component.fields[2]['ref']
+        #        logger.error("{0} = {1} / {2}".
+        #                     format(component_type,
+        #                            component_reference,
+        #                            component_footprint))
+        #        logger.warn(self.get_component_definition(component_type))
+
+        #self.get_component_definition("power:GND")
+        #self.get_component_definition("74xx:74LS04")
+        #self.get_component_definition("74LS04")
+
+        #logger.warn(self.schemas)
+
+

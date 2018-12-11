@@ -44,35 +44,6 @@ class KiCadLibrary(object):
         if schema is not None:
             self.load_schema(schema)
 
-        # For  some components,  a reference  will be  assigned inside
-        # Eeschema GUI  ("U31" for  74LS04). However, if  sub-unit "G"
-        # hasn't  been  set, they  will  have  the name "U?"  in  the
-        # eeschema file,  and no  reference to  U31 will  be recorded.
-        # The solution to that is to  add the "G" unit, then they will
-        # be  named  U31  in  the  eeschema  file.   We'll  need  some
-        # validation for this, and a descriptive error message.
-
-        # For some  components, the  'comp.labels' field  reports 'U?'
-        # component references.  Possibly due to older copy-paste:ing?
-        # However, the later comp.fields have the correct information.
-
-        #for schema_name in self.schemas:
-        #    for component in self.schemas[schema_name].components:
-        #        component_type      = component.labels['name']
-        #        component_reference = component.fields[0]['ref']
-        #        component_footprint = component.fields[2]['ref']
-        #        logger.error("{0} = {1} / {2}".
-        #                     format(component_type,
-        #                            component_reference,
-        #                            component_footprint))
-        #        logger.warn(self.get_component_definition(component_type))
-
-        #self.get_component_definition("power:GND")
-        #self.get_component_definition("74xx:74LS04")
-        #self.get_component_definition("74LS04")
-
-        #logger.warn(self.schemas)
-
         # Make pcbnew.MODULE object pretty print their reference.
         pcbnew.MODULE.__str__ = new.instancemethod(
             self.__prettyprint_reference, None, pcbnew.MODULE)
@@ -440,13 +411,14 @@ class KiCadLibrary(object):
             raise AssertionError("Component orientation(s) are wrong")
 
     def _get_all_edge_cuts(self):
+        """Return a dict of all edge cuts"""
         if self.cuts is None:
             self.cuts = {}
             for segment in self.board.GetDrawings():
-                if pcbnew.DRAWSEGMENT_ClassOf(segment):
-                    if self.board.GetLayerName(segment.GetLayer()) == 'Edge.Cuts':
-                        self.cuts[segment.GetStart()] = segment.GetEnd()
-                        self.cuts[segment.GetEnd()] = segment.GetStart()
+                if pcbnew.DRAWSEGMENT_ClassOf(segment) and \
+                   self.board.GetLayerName(segment.GetLayer()) == 'Edge.Cuts':
+                    self.cuts[segment.GetStart()] = segment.GetEnd()
+                    self.cuts[segment.GetEnd()] = segment.GetStart()
         return self.cuts
 
     # pylint: disable=too-many-arguments
@@ -522,39 +494,3 @@ class KiCadLibrary(object):
         mil = float(mil)
         millimeter = mil * 25.4/1000
         return millimeter
-
-    def module_distance_to_edge_should_be_same(self, modules=None, value=None,
-                                               reference=None, pad_netname=None):
-        """
-        THIS KEYWORD IS IN REALITY NON-FUNCTIONAL!
-        """
-        modlist = self.find_modules(modules, value, reference, pad_netname)
-        cuts = self._get_all_edge_cuts()
-        for mod in modlist:
-            #logger.warn(mod.GetNextPadName(False))
-            dists_x = []
-            dists_y = []
-            for cut in cuts:
-                #x = mod.GetFootprintRect().Centre().x
-                #y = mod.GetFootprintRect().Centre().y
-                # Fixme: Need to rewrite this to make more sense.
-                x = mod.FindPadByName("1").GetPosition().x - \
-                    abs(mod.FindPadByName("1").GetPosition().x - \
-                        mod.FindPadByName("2").GetPosition().x)/2
-                y = mod.FindPadByName("1").GetPosition().y - \
-                    abs(mod.FindPadByName("1").GetPosition().y - \
-                        mod.FindPadByName("2").GetPosition().y)/2
-                if cut.x == cuts[cut].x:
-                    dists_x.append(abs(x-cut.x))
-                elif cut.y == cuts[cut].y:
-                    dists_y.append(abs(y-cut.y))
-                else:
-                    raise AssertionError("Unexpected internal error")
-
-            # Fixme: Not really checking anything....
-            logger.warn("{0: <5} @ {1: >10};{2: >10} {3: >10} ; {4: <10}".format(
-                mod.GetReference(),
-                mod.GetFootprintRect().Centre().x/1000000.0,
-                mod.GetFootprintRect().Centre().y/1000000.0,
-                min(dists_x)/1000000.0,
-                min(dists_y)/1000000.0))
