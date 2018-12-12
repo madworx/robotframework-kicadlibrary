@@ -144,7 +144,7 @@ class KiCadLibrary(object):
 
     def load_component_library(self, library):
         """
-        Load a library file (.lib) containing component definitions.
+        Load library file(s) (.lib) containing component definitions.
 
         Library can be either a relative path, an absolute path, or
         a name (with or without .lib extension).
@@ -155,7 +155,7 @@ class KiCadLibrary(object):
         automagically.
 
         Examples:
-        | `Load Component Library` | `74xx` |
+        | `Load Component Library` | `74xx` | `4xxx` |
         | `Load Component Library` | `../kicad_libs/LIB_UM245R/UM245R.lib` |
         | `Suite Setup` | `Load Component Library` | `74xx` |
         """
@@ -163,24 +163,30 @@ class KiCadLibrary(object):
         # Fixme: If we supply a path  instead of a mnemonic name, that
         # path  will go  as index  for the  component_libraries array,
         # which is incorrect.
-        library = re.sub(r"[.]lib$", "", library)
-        if library not in self.component_libraries:
-            for path in self.component_library_search_paths:
-                candidate = os.path.join(path, "{0}.lib".format(library))
-                if os.path.exists(candidate):
-                    logger.debug("Found requested library [{0}] at [{1}].".
-                                 format(library, candidate))
-                    old = sys.stderr
-                    stderr_buf = StringIO.StringIO()
-                    sys.stderr = stderr_buf
-                    self.component_libraries[library] = schlib.SchLib(os.path.abspath(candidate))
-                    sys.stderr = old
-                    if stderr_buf.getvalue():
-                        raise AssertionError("{0}: {1}".format(library, stderr_buf.getvalue()))
-                    return self.component_libraries[library]
-            raise AssertionError("Failed to find component library [{0}.lib]".format(library))
-        return self.component_libraries[library]
-
+        if isinstance(library, list):
+            ret = []
+            for lib in library:
+                ret.append(self.load_component_library(lib))
+            return ret
+        else:
+            library = re.sub(r"[.]lib$", "", library)
+            if library not in self.component_libraries:
+                for path in self.component_library_search_paths:
+                    candidate = os.path.join(path, "{0}.lib".format(library))
+                    if os.path.exists(candidate):
+                        logger.debug("Found requested library [{0}] at [{1}].".
+                                     format(library, candidate))
+                        old = sys.stderr
+                        stderr_buf = StringIO.StringIO()
+                        sys.stderr = stderr_buf
+                        self.component_libraries[library] \
+                            = schlib.SchLib(os.path.abspath(candidate))
+                        sys.stderr = old
+                        if stderr_buf.getvalue():
+                            raise AssertionError("{0}: {1}".format(library, stderr_buf.getvalue()))
+                        return self.component_libraries[library]
+                raise AssertionError("Failed to find component library [{0}.lib]".format(library))
+            return self.component_libraries[library]
 
     def find_modules(self, modules=None, value=None,
                      reference=None, pad_netname=None):
