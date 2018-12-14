@@ -4,9 +4,49 @@
 
 A [Robot Framework](http://robotframework.org/) library for validating [KiCad](https://kicad.github.io/) designs.
 
-Releases are available via regular [PyPI](https://pypi.org/project/robotframework-kicadlibrary/) as well as [GitHib releases](https://github.com/madworx/robotframework-kicadlibrary/releases).
+Releases are available via regular [PyPI](https://pypi.org/project/robotframework-kicadlibrary/) as well as [GitHib releases](https://github.com/madworx/robotframework-kicadlibrary/releases). Example projects/usage is available under the examples/ sub-directory.
 
 [Keyword documentation](https://maven.madworx.se/html/madworx/robotframework-kicadlibrary/releases/download/0.1.4/KiCadLibrary.html) is available online, as well as downloadable via [GitHub Releases](https://github.com/madworx/robotframework-kicadlibrary/releases/latest).
 
-## Author
-Martin Kjellstrand <martin.kjellstrand@madworx.se>
+## Getting Started
+
+### Prerequisites
+
+You'll need an installation of Python, as well as `pip`. Please see your operating systems documentation on how to install those tools.
+
+You will also need Robot Framework installed, but if you install using `pip`, robot framework will automatically be installed for you.
+
+### Installing
+
+Installing using pip:
+
+```
+$ pip install robotframework-kicadlibrary
+```
+
+## Using the library
+
+```
+*** Variables ***
+Library    KiCadLibrary    schema=myproject.sch    pcb=myproject.kicad_pcb
+
+*** Test cases ***
+Module pads should be on grid
+    Module Pads Should Be On Grid    50 mil    reference=.*$
+```
+
+## Contributing
+
+Any and all contributions are welcome, in the form of [pull requests](https://github.com/madworx/robotframework-kicadlibrary/pulls).
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [releases on this repository](https://github.com/madworx/robotframework-kicadlibrary/releases). 
+
+## Authors
+
+* **Martin Kjellstrand** - *Initial work* - [madworx](https://github.com/madworx)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details
