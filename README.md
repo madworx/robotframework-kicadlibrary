@@ -6,5 +6,7 @@ A [Robot Framework](http://robotframework.org/) library for validating [KiCad](h
 
 Releases are available via regular [PyPI](https://pypi.org/project/robotframework-kicadlibrary/) as well as [GitHib releases](https://github.com/madworx/robotframework-kicadlibrary/releases).
 
+[Keyword documentation](https://maven.madworx.se/html/madworx/robotframework-kicadlibrary/releases/download/0.1.4/KiCadLibrary.html) is available online, as well as downloadable via [GitHub Releases](https://github.com/madworx/robotframework-kicadlibrary/releases/latest).
+
 ## Author
 Martin Kjellstrand <martin.kjellstrand@madworx.se>
