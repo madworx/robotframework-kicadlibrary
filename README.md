@@ -8,8 +8,6 @@ Releases are available via regular [PyPI](https://pypi.org/project/robotframewor
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
 ### Prerequisites
 
 You'll need an installation of Python, as well as `pip`. Please see your operating systems documentation on how to install those tools.
@@ -24,12 +22,15 @@ Installing using pip:
 $ pip install robotframework-kicadlibrary
 ```
 
-## Running the tests
-
-The unit tests for this library can be run using the `tests` Makefile target:
+## Using the library
 
 ```
-$ make tests
+*** Variables ***
+Library    KiCadLibrary    schema=myproject.sch    pcb=myproject.kicad_pcb
+
+*** Test cases ***
+Module pads should be on grid
+    Module Pads Should Be On Grid    50 mil    reference=.*$
 ```
 
 ## Contributing
