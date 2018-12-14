@@ -45,7 +45,7 @@ setup(name='robotframework-kicadlibrary',
           'Operating System :: Microsoft :: Windows',
           'Operating System :: POSIX',
           'Programming Language :: Python',
-          'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)'
-          'Topic :: Software Development :: Testing :: Acceptance',
+          'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
+          'Topic :: Software Development :: Testing :: Acceptance'
           ]
 )
