@@ -1,9 +1,6 @@
 #! /bin/bash
 
-set -x 1>&2
-set 1>&1
-
-export TAGGED_VERSION="$1"
+export TAGGED_VERSION="$(git describe --exact-match HEAD 2>/dev/null)"
 export DOCKER_USERNAME="$2"
 export DOCKER_PASSWORD="$3"
 
