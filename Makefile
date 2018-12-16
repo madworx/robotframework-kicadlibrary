@@ -14,6 +14,9 @@ docker:
 	export KICADLIBRARY_VERSION="$$(python setup.py --get-version)" ; \
 	docker build -t "robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION .
 
+docker-extract-artifacts:
+	docker run --rm --entrypoint /bin/tar robotframework-kicadlibrary:0.1.7p0 cf - build | tar xf -
+
 setup-environment:
 	pip install . --user
 	pip install coverage --user

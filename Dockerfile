@@ -36,8 +36,7 @@ RUN sed -e "s#'setuptools_scm', ##g" \
         -i setup.py
 
 # Run unit-tests and build wheel.
-RUN python setup.py test \
-    && python setup.py sdist bdist_wheel
+RUN make dist doc
 RUN pip install dist/*.whl
 
 # Run integration tests
