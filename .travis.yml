@@ -26,13 +26,6 @@ script:
   - sonar-scanner $([[ ! -z "${TAGGED_VERSION}" ]] && echo "-Dsonar.projectVersion=${TAGGED_VERSION}")
 
 deploy:
-  - provider: script
-    script: bash ./bin/deploy-to-dockerhub.sh "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}"
-    skip_cleanup: true
-    on:
-      repo: madworx/robotframework-kicadlibrary
-      all_branches: true
-
   - provider: releases
     api_key:
       secure: e7LRwziBqApiSkXYmlMQinSZfds/ksRkbq9zsAkXPue7LY2Ew+SdmreQbiC/axducyoPMYSr7IrmvH+1QQW0ciBmmzWb1kIPi0F60+noEbwoRrn3UuF3LLSN57X67kP5fh9cnz54+DsSax+8t6ccqg/tIM5Bk9baMTXxNLh3TzxbED1O/foWSJ0SzSINSMr+4YfT/IjVQPU/1LODSwlQYbuJxgWy0Du8GvJzC5KElR0LCUkLuAS74GXm+8vcebI4cp+cOs/QLub1jPyZNSsJK41lZpUUU1VnZe9LIvML0DsBVmJg23z5gFAsf5D3fhmRKoVbCQhuidaM/Fogk57tOj+gBuucCO3GiPeE3phZfBOVDqNhr2immfho5Ves0sVNvt+yPo2gLX1S5svLP3LpsNHtTMmJ23EeyA0wHzt3YXYxkbVsLxY9OWc9HUCwVPZvB3Wr3e5OiVRHWPnKTRKteA/wdJHjYE61GJb1ppZZJDY42s1p3J1Xgm9c5v5zJ3dJe543BZ81pcbqUrAxmuMGmQdYeFVRiLmyaaMrySAewLb6PJ45ja+BNrJMOKFYdH3jiavcevglD46bN4XPWhnFkOyB28hwwMuwM0C9tfhHPLGpXhJiJIKV6diGJzPdSIlp55tKfU8IN+Ez2dRkfq8H+2FwJ1NRvlnRFW4Np3el25M=
@@ -57,6 +50,14 @@ deploy:
       - dist/robotframework*
     skip_cleanup: true
     overwrite: true
+    on:
+      repo: madworx/robotframework-kicadlibrary
+      tags: true
+      all_branches: true
+
+  - provider: script
+    script: bash ./bin/deploy-to-dockerhub.sh "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}"
+    skip_cleanup: true
     on:
       repo: madworx/robotframework-kicadlibrary
       tags: true
