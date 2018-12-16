@@ -23,12 +23,11 @@ script:
   - make docker
   - make docker-extract-artifacts
   - export TAGGED_VERSION=$(git describe --exact-match HEAD 2>/dev/null)
-  - export DOCKER_USERNAME DOCKER_PASSWORD
   - sonar-scanner $([[ ! -z "${TAGGED_VERSION}" ]] && echo "-Dsonar.projectVersion=${TAGGED_VERSION}")
 
 deploy:
   - provider: script
-    script: bash ./bin/deploy-to-dockerhub.sh
+    script: bash ./bin/deploy-to-dockerhub.sh "${TAGGED_VERSION}" "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}"
     skip_cleanup: true
     on:
       repo: madworx/robotframework-kicadlibrary
