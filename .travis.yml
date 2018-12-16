@@ -2,6 +2,9 @@ language: python
 
 dist: xenial
 
+services:
+  - docker
+
 addons:
   sonarcloud:
     organization: madworx
@@ -18,6 +21,7 @@ before_install:
   - sudo apt-get update
   - sudo apt install --assume-yes kicad kicad-symbols kicad-footprints
   - make setup
+  - source <(curl https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash)
 
 script:
   - make tests
@@ -55,3 +59,7 @@ deploy:
       repo: madworx/robotframework-kicadlibrary
       tags: true
       all_branches: true
+
+after_deploy:
+  - [[ ! -z "${TAGGED_VERSION}" ]] &&
+    dockerhub_push_image madworx/robotframework-kicadlibrary:${TAGGED_VERSION}

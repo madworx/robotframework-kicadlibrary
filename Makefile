@@ -1,3 +1,5 @@
+SHELL = bash
+
 all: tests doc
 
 setup:
@@ -7,6 +9,10 @@ tests: setup
 
 dist: clean tests
 	python setup.py sdist bdist_wheel
+
+docker:
+	export KICADLIBRARY_VERSION="$$(python setup.py --get-version)" ; \
+	docker build -t "robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION .
 
 setup-environment:
 	pip install . --user

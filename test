@@ -1,9 +1,0 @@
-
-asdf
-ads
-safd
-f
-#!/bin/bash
-
-export TAGGED_VERSION=$(git describe --exact-match HEAD 2>/dev/null)
-echo sonar-scanner $( [[ ! -z "${TAGGED_VERSION}" ]] && echo "-Dsonar.projectVersion=${TAGGED_VERSION}" )

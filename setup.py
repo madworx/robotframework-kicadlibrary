@@ -10,11 +10,17 @@ from src.robotdoc.libdocpkg import setup_command
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner','pytest<5'] if needs_pytest else []
 
+if "--get-version" in sys.argv:
+    from setuptools_scm import get_version
+    print get_version(root='.', relative_to=__file__)
+    sys.exit(0)
+
 setup(name='robotframework-kicadlibrary',
-      version_format='{tag}.dev{commitcount}+{gitsha}',
       description='Robot Framework KiCAD library',
       long_description=open('README.md').read(),
       long_description_content_type='text/markdown',
+      #version=,
+      use_scm_version=True,
       url='https://github.com/madworx/robotframework-kicadlibrary',
       author='Martin Kjellstrand',
       author_email='martin.kjellstrand@madworx.se',
@@ -25,10 +31,10 @@ setup(name='robotframework-kicadlibrary',
                 'KiCadLibrary.kicad_library_utils.schlib'],
       package_dir={'': 'src'},
       install_requires=['robotframework<4'],
-      setup_requires=['setuptools-git-version', 'robotframework<4'] + pytest_runner,
+      setup_requires=['setuptools_scm', 'robotframework<4'] + pytest_runner,
       tests_require=['pytest-runner', 'pytest<5', 'pytest-cov', 'pytest-mock',
                      'pylint<2.0.0', 'pytest-pylint', 'coverage', 'pytest-html',
-                     'setuptools-git-version', 'robotframework<4'],
+                     'setuptools_scm', 'robotframework<4'],
       test_suite='tests',
       cmdclass = {'build_rf_docs': setup_command.BuildLibDoc},
       zip_safe = True,
