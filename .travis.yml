@@ -28,7 +28,7 @@ script:
 
 deploy:
   - provider: script
-    script: bash -c "if [[ ! -z '${TAGGED_VERSION}' ]] ; then source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash') ; dockerhub_push_image 'madworx/robotframework-kicadlibrary:${TAGGED_VERSION}' && dockerhub_set_description 'madworx/robotframework-kicadlibrary' README.md ; fi"
+    script: ./bin/deploy-to-dockerhub.sh
     skip_cleanup: true
     on:
       repo: madworx/robotframework-kicadlibrary
