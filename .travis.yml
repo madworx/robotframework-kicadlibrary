@@ -23,9 +23,18 @@ script:
   - make docker
   - make docker-extract-artifacts
   - export TAGGED_VERSION=$(git describe --exact-match HEAD 2>/dev/null)
+  - export DOCKER_USERNAME DOCKER_PASSWORD
   - sonar-scanner $([[ ! -z "${TAGGED_VERSION}" ]] && echo "-Dsonar.projectVersion=${TAGGED_VERSION}")
 
 deploy:
+  - provider: script
+    script: bash -c "if [[ ! -z '${TAGGED_VERSION}' ]] ; then source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash') ; dockerhub_push_image 'madworx/robotframework-kicadlibrary:${TAGGED_VERSION}' && dockerhub_set_description 'madworx/robotframework-kicadlibrary' README.md ; fi"
+    skip_cleanup: true
+    on:
+      repo: madworx/robotframework-kicadlibrary
+      tags: true
+      all_branches: true
+
   - provider: releases
     api_key:
       secure: e7LRwziBqApiSkXYmlMQinSZfds/ksRkbq9zsAkXPue7LY2Ew+SdmreQbiC/axducyoPMYSr7IrmvH+1QQW0ciBmmzWb1kIPi0F60+noEbwoRrn3UuF3LLSN57X67kP5fh9cnz54+DsSax+8t6ccqg/tIM5Bk9baMTXxNLh3TzxbED1O/foWSJ0SzSINSMr+4YfT/IjVQPU/1LODSwlQYbuJxgWy0Du8GvJzC5KElR0LCUkLuAS74GXm+8vcebI4cp+cOs/QLub1jPyZNSsJK41lZpUUU1VnZe9LIvML0DsBVmJg23z5gFAsf5D3fhmRKoVbCQhuidaM/Fogk57tOj+gBuucCO3GiPeE3phZfBOVDqNhr2immfho5Ves0sVNvt+yPo2gLX1S5svLP3LpsNHtTMmJ23EeyA0wHzt3YXYxkbVsLxY9OWc9HUCwVPZvB3Wr3e5OiVRHWPnKTRKteA/wdJHjYE61GJb1ppZZJDY42s1p3J1Xgm9c5v5zJ3dJe543BZ81pcbqUrAxmuMGmQdYeFVRiLmyaaMrySAewLb6PJ45ja+BNrJMOKFYdH3jiavcevglD46bN4XPWhnFkOyB28hwwMuwM0C9tfhHPLGpXhJiJIKV6diGJzPdSIlp55tKfU8IN+Ez2dRkfq8H+2FwJ1NRvlnRFW4Np3el25M=
@@ -55,9 +64,3 @@ deploy:
       tags: true
       all_branches: true
 
-  - provider: script
-    script: export DOCKER_USENAME ; export DOCKER_PASSWORD ; bash -c "if [[ ! -z '${TAGGED_VERSION}' ]] ; then source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash') ; dockerhub_push_image 'madworx/robotframework-kicadlibrary:${TAGGED_VERSION}' && dockerhub_set_description 'madworx/robotframework-kicadlibrary' README.md ; fi"
-    on:
-      repo: madworx/robotframework-kicadlibrary
-      tags: true
-      all_branches: true
