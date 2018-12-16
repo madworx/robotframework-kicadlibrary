@@ -46,7 +46,14 @@ RUN cd examples \
        ; done
 
 FROM embryo
-COPY --from=build /build/dist/*.whl /build/dist/*.tar.gz /build/docs/*.html /build/
+COPY --from=build \
+     /build/dist/*.whl \
+     /build/dist/*.tar.gz \
+     /build/docs/*.html \
+     /build/build/coverage.xml \
+     /build/build/nosetests.xml \
+     /build/
+     
 RUN pip install /build/*.whl
 RUN useradd --base-dir / \
             --system \

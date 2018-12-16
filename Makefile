@@ -12,11 +12,11 @@ dist: clean tests
 
 docker:
 	export KICADLIBRARY_VERSION="$$(python setup.py --get-version)" ; \
-	docker build -t "robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION .
+	docker build -t "madworx/robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION .
 
 docker-extract-artifacts:
 	export KICADLIBRARY_VERSION="$$(python setup.py --get-version)" ; \
-	docker run --rm --entrypoint /bin/tar "robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" cf - build | tar xf -
+	docker run --rm --entrypoint /bin/tar "madworx/robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" cf - build | tar xvf -
 
 setup-environment:
 	pip install . --user
