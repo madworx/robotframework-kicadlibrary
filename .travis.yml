@@ -21,6 +21,7 @@ before_install:
 
 script:
   - make docker
+  - make docker-extract-artifacts
   - export TAGGED_VERSION=$(git describe --exact-match HEAD 2>/dev/null)
   - sonar-scanner $([[ ! -z "${TAGGED_VERSION}" ]] && echo "-Dsonar.projectVersion=${TAGGED_VERSION}")
 
