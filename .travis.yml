@@ -20,6 +20,7 @@ before_install:
   - sudo add-apt-repository -y ppa:js-reynaud/kicad-5
   - sudo apt-get update
   - sudo apt install --assume-yes kicad kicad-symbols kicad-footprints
+  - sudo pip install setuptools_scm
   - make setup
   - source <(curl "https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash")
 
@@ -45,7 +46,7 @@ deploy:
       repo: madworx/robotframework-kicadlibrary
       tags: true
       all_branches: true
-          
+
   - provider: pypi
     user: "madworx"
     password:
