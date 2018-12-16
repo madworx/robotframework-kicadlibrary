@@ -29,6 +29,7 @@ script:
   - sonar-scanner $([[ ! -z "${TAGGED_VERSION}" ]] && echo "-Dsonar.projectVersion=${TAGGED_VERSION}")
   - make dist
   - make doc
+  - make docker
 
 deploy:
   - provider: releases
@@ -62,4 +63,5 @@ deploy:
 
 after_deploy:
   - [[ ! -z "${TAGGED_VERSION}" ]] &&
-    dockerhub_push_image madworx/robotframework-kicadlibrary:${TAGGED_VERSION}
+    dockerhub_push_image madworx/robotframework-kicadlibrary:${TAGGED_VERSION} &&
+    dockerhub_set_description madworx/robotframework-kicadlibrary README.md
