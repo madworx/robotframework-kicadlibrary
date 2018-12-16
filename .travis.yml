@@ -21,7 +21,7 @@ before_install:
   - sudo apt-get update
   - sudo apt install --assume-yes kicad kicad-symbols kicad-footprints
   - make setup
-  - source <(curl https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash)
+  - source <(curl "https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash")
 
 script:
   - make tests
@@ -61,7 +61,9 @@ deploy:
       tags: true
       all_branches: true
 
-after_deploy:
-  - [[ ! -z "${TAGGED_VERSION}" ]] &&
-    dockerhub_push_image madworx/robotframework-kicadlibrary:${TAGGED_VERSION} &&
-    dockerhub_set_description madworx/robotframework-kicadlibrary README.md
+  - provder: script
+    script: if [[ ! -z "${TAGGED_VERSION}" ]] ; then dockerhub_push_image "madworx/robotframework-kicadlibrary:${TAGGED_VERSION}" && dockerhub_set_description madworx/robotframework-kicadlibrary README.md ; fi
+    on:
+      repo: madworx/robotframework-kicadlibrary
+      tags: true
+      all_branches: true
