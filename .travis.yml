@@ -63,7 +63,7 @@ deploy:
       all_branches: true
 
   - provider: script
-    script: if [[ ! -z "${TAGGED_VERSION}" ]] ; then dockerhub_push_image "madworx/robotframework-kicadlibrary:${TAGGED_VERSION}" && dockerhub_set_description madworx/robotframework-kicadlibrary README.md ; fi
+    script: if [ ! -z "${TAGGED_VERSION}" ] ; then dockerhub_push_image "madworx/robotframework-kicadlibrary:${TAGGED_VERSION}" && dockerhub_set_description madworx/robotframework-kicadlibrary README.md ; fi
     on:
       repo: madworx/robotframework-kicadlibrary
       tags: true
