@@ -47,7 +47,6 @@ deploy:
       secure: itEiOPtesxPyjG9kYxJ3OCMplmX3pxnNWBXBDNxN2AfmH/NwhTC++eK4WK5UPPoogeFIKZJPXMDsMNI19Edv8Rbp+tDyzP+Wb/IJVoRxUq/gE4gKknoxWhpfGnEOkHkuKI2kyaFOuCtk4FNvPb9BgMtWZKjsLDnPcjYrg69VihzXtVeoHVRSxVe3snDsTRAVgJKRj09d9uhuiEUt9a0MvumY7HIsGKUkvHYn6pnmw/sU3WzXPniEMYNQDE4GetXOP2zUcCa/27QuTKK42UVgw+8N8u8J0F5lxTfj0N9YdsUHha1TB7fmUvADcHaDg2KHGG/tkg84UaU0HSo+Hp+pHbk4rcgWH3bwHxOG9jd1mFZEEywgQ1hkjaqOzhdYhdGvVISP9V5EDFDXYS5BHn6y8Wor8EnYOMyFVlY0UeVwedaGjjduabFrpBu59cki8Z1FjNkFlYJsH0KJJrqPWztVS3ZV0k1a3xtspdtrkEZKg/vMZLJ7wH9Sm1FB3GO6raK8+yuYQ5+XD7lDLo9QHLDmtxdC18og0r4MWoo9tTGjKIxq+x8z5tRMr473H4CnTo78AqSo8x/kOHcCVrP3tTWogR6nWTcsIvbrUzDLHSubA7CBQpU3DGyJW+oUcyO04wUxsJepLFJ1byD6Rak+E7Mz+ptGH59s92UyxTZGpXme0pg=
     file_glob: true
     file:
-      - build/KiCadLibrary.html
       - build/robotframework*
     skip_cleanup: true
     overwrite: true
