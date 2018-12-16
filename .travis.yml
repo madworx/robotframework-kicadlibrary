@@ -56,7 +56,7 @@ deploy:
       all_branches: true
 
   - provider: script
-    script: if [ ! -z "${TAGGED_VERSION}" ] ; then source <(curl "https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash") ; dockerhub_push_image "madworx/robotframework-kicadlibrary:${TAGGED_VERSION}" && dockerhub_set_description madworx/robotframework-kicadlibrary README.md ; fi
+    script: bash -c "if [[ ! -z '${TAGGED_VERSION}' ]] ; then source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash') ; dockerhub_push_image 'madworx/robotframework-kicadlibrary:${TAGGED_VERSION}' && dockerhub_set_description 'madworx/robotframework-kicadlibrary' README.md ; fi"
     on:
       repo: madworx/robotframework-kicadlibrary
       tags: true
