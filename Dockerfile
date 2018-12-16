@@ -47,8 +47,8 @@ RUN cd examples \
        ; done
 
 FROM embryo
-COPY --from=build /build/dist/*.whl /tmp/
-RUN pip install /tmp/*.whl
+COPY --from=build /build/dist/*.whl /build/dist/*.tar.gz /build/docs/*.html /build/
+RUN pip install /build/*.whl
 RUN useradd --base-dir / \
             --system \
             --user-group \
