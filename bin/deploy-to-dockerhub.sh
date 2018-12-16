@@ -1,8 +1,8 @@
 #! /bin/bash
 
 export TAGGED_VERSION="$(git describe --exact-match HEAD 2>/dev/null)"
-export DOCKER_USERNAME="$2"
-export DOCKER_PASSWORD="$3"
+export DOCKER_USERNAME="$1"
+export DOCKER_PASSWORD="$2"
 
 if [[ ! -z '${TAGGED_VERSION}' ]] ; then
     echo "We are on par with a tagged release -- deploying to github."
