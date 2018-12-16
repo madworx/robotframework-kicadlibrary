@@ -31,8 +31,8 @@ deploy:
       secure: e7LRwziBqApiSkXYmlMQinSZfds/ksRkbq9zsAkXPue7LY2Ew+SdmreQbiC/axducyoPMYSr7IrmvH+1QQW0ciBmmzWb1kIPi0F60+noEbwoRrn3UuF3LLSN57X67kP5fh9cnz54+DsSax+8t6ccqg/tIM5Bk9baMTXxNLh3TzxbED1O/foWSJ0SzSINSMr+4YfT/IjVQPU/1LODSwlQYbuJxgWy0Du8GvJzC5KElR0LCUkLuAS74GXm+8vcebI4cp+cOs/QLub1jPyZNSsJK41lZpUUU1VnZe9LIvML0DsBVmJg23z5gFAsf5D3fhmRKoVbCQhuidaM/Fogk57tOj+gBuucCO3GiPeE3phZfBOVDqNhr2immfho5Ves0sVNvt+yPo2gLX1S5svLP3LpsNHtTMmJ23EeyA0wHzt3YXYxkbVsLxY9OWc9HUCwVPZvB3Wr3e5OiVRHWPnKTRKteA/wdJHjYE61GJb1ppZZJDY42s1p3J1Xgm9c5v5zJ3dJe543BZ81pcbqUrAxmuMGmQdYeFVRiLmyaaMrySAewLb6PJ45ja+BNrJMOKFYdH3jiavcevglD46bN4XPWhnFkOyB28hwwMuwM0C9tfhHPLGpXhJiJIKV6diGJzPdSIlp55tKfU8IN+Ez2dRkfq8H+2FwJ1NRvlnRFW4Np3el25M=
     file_glob: true
     file:
-      - dist/KiCadLibrary.html
-      - dist/robotframework*
+      - build/KiCadLibrary.html
+      - build/robotframework*
     skip_cleanup: true
     overwrite: true
     on:
@@ -46,8 +46,8 @@ deploy:
       secure: itEiOPtesxPyjG9kYxJ3OCMplmX3pxnNWBXBDNxN2AfmH/NwhTC++eK4WK5UPPoogeFIKZJPXMDsMNI19Edv8Rbp+tDyzP+Wb/IJVoRxUq/gE4gKknoxWhpfGnEOkHkuKI2kyaFOuCtk4FNvPb9BgMtWZKjsLDnPcjYrg69VihzXtVeoHVRSxVe3snDsTRAVgJKRj09d9uhuiEUt9a0MvumY7HIsGKUkvHYn6pnmw/sU3WzXPniEMYNQDE4GetXOP2zUcCa/27QuTKK42UVgw+8N8u8J0F5lxTfj0N9YdsUHha1TB7fmUvADcHaDg2KHGG/tkg84UaU0HSo+Hp+pHbk4rcgWH3bwHxOG9jd1mFZEEywgQ1hkjaqOzhdYhdGvVISP9V5EDFDXYS5BHn6y8Wor8EnYOMyFVlY0UeVwedaGjjduabFrpBu59cki8Z1FjNkFlYJsH0KJJrqPWztVS3ZV0k1a3xtspdtrkEZKg/vMZLJ7wH9Sm1FB3GO6raK8+yuYQ5+XD7lDLo9QHLDmtxdC18og0r4MWoo9tTGjKIxq+x8z5tRMr473H4CnTo78AqSo8x/kOHcCVrP3tTWogR6nWTcsIvbrUzDLHSubA7CBQpU3DGyJW+oUcyO04wUxsJepLFJ1byD6Rak+E7Mz+ptGH59s92UyxTZGpXme0pg=
     file_glob: true
     file:
-      - dist/KiCadLibrary.html
-      - dist/robotframework*
+      - build/KiCadLibrary.html
+      - build/robotframework*
     skip_cleanup: true
     overwrite: true
     on:
