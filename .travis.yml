@@ -28,7 +28,7 @@ script:
 
 deploy:
   - provider: script
-    script: ./bin/deploy-to-dockerhub.sh
+    script: bash ./bin/deploy-to-dockerhub.sh
     skip_cleanup: true
     on:
       repo: madworx/robotframework-kicadlibrary
