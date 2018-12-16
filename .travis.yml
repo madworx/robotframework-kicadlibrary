@@ -32,7 +32,6 @@ deploy:
     skip_cleanup: true
     on:
       repo: madworx/robotframework-kicadlibrary
-      tags: true
       all_branches: true
 
   - provider: releases
