@@ -18,6 +18,7 @@ sudo: required
 
 before_install:
   - source <(curl "https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash")
+  - pip install setuptools_scm
 
 script:
   - make docker
