@@ -2,13 +2,17 @@ FROM ubuntu:bionic AS embryo
 
 MAINTAINER Martin Kjellstrand [https://www.github.com/madworx]
 
-RUN apt-get -qq update \
-    && apt-get -qq install --assume-yes software-properties-common \
-    && add-apt-repository -y ppa:js-reynaud/kicad-5 \
-    && dpkg --purge software-properties-common \
-    && apt-get autoremove -y \
-    && apt-get -qq update
-RUN apt-get install -qq --assume-yes --no-install-recommends kicad kicad-symbols kicad-footprints python python-pip
+
+RUN echo "Adding 'ppa:ja-reynaud/kicad-5' repository and installing..." \
+    && apt-get -qq update < /dev/null > /dev/null \
+    && apt-get -qq install --assume-yes software-properties-common < /dev/null > /dev/null \
+    && add-apt-repository -y ppa:js-reynaud/kicad-5 < /dev/null > /dev/null \
+    && dpkg --purge software-properties-common < /dev/null > /dev/null \
+    && apt-get autoremove -y < /dev/null > /dev/null \
+    && apt-get -qq update < /dev/null > /dev/null
+RUN apt-get install -qq --assume-yes --no-install-recommends \
+    kicad kicad-symbols kicad-footprints python python-pip \
+    < /dev/null > /dev/null
 
 FROM embryo AS build
 #
