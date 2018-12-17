@@ -37,5 +37,12 @@ class BuildLibDoc(Command):
         for path in self.distribution.package_dir.values():
             sys.path.insert(0, path)
         for lib in self.libraries:
-            html_file = os.path.join(self.output_dir, lib + '.html')
+            if 'KICADLIBRARY_VERSION' in os.environ:
+                ver = os.environ['KICADLIBRARY_VERSION']
+            else:
+                from setuptools_scm import get_version
+                ver =  get_version(root='../../..', relative_to=__file__) 
+            html_file = os.path.join(self.output_dir,
+                                     lib + '-' +
+                                    ver + '.html')
             robot.libdoc.libdoc(lib, html_file)

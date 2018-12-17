@@ -77,11 +77,11 @@ def test_load_missing_component_lib_should_fail():
         lib.load_component_library('/non-existant.adfkjdsaflkj')
 
 def test_load_missingdcm_component_lib_should_fail():
-    test_dir, _ = os.path.splitext(__file__)
+    test_dir = os.path.abspath(os.path.splitext(__file__)[0])
     with pytest.raises(AssertionError, match=r'.*DCM file.+does not exist'):
         lib.load_component_library(test_dir+'/missing_dcm.lib')
 
 def test_load_invalid_component_lib_should_fail():
-    test_dir, _ = os.path.splitext(__file__)
+    test_dir = os.path.abspath(os.path.splitext(__file__)[0])
     with pytest.raises(AssertionError, match='not a KiCad Schematic Library File'):
         lib.load_component_library(test_dir+'/invalid.lib')

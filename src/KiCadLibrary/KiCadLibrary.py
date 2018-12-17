@@ -12,6 +12,7 @@ import new
 
 import pcbnew
 
+from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from robot.api import logger
 
 # pylint: disable=relative-import
@@ -95,8 +96,21 @@ class KiCadLibrary(object):
 
     def load_pcb(self, filename):
         """Load a KiCAD / Pcbnew (.kicad_pcb) file."""
-        self.board = pcbnew.LoadBoard(filename)
+        self.board = pcbnew.LoadBoard(self._resolve_filename(filename))
         self.board.BuildListOfNets()
+
+    def _resolve_filename(self, filename, relative_to=None):
+        if relative_to is None:
+            try:
+                relative_to = BuiltIn().get_variable_value("${SUITE SOURCE}")
+            except RobotNotRunningError:
+                # If we're not running RF, use __file__ instead for resolving
+                # relative file names.
+                relative_to = __file__
+        if os.path.isabs(filename):
+            return os.path.abspath(filename)
+        return  os.path.join(os.path.dirname(relative_to),
+                             filename)
 
     def load_schema(self, filename, subschema='_root'):
         """Load a KiCAD / Eeschema (.sch) file."""
@@ -106,7 +120,7 @@ class KiCadLibrary(object):
             old = sys.stderr
             stderr_buf = StringIO.StringIO()
             sys.stderr = stderr_buf
-            self.schemas[subschema] = sch.Schematic(filename)
+            self.schemas[subschema] = sch.Schematic(self._resolve_filename(filename))
             sys.stderr = old
             if stderr_buf.getvalue():
                 raise AssertionError("{0}: {1}".format(filename, stderr_buf.getvalue()))
@@ -114,8 +128,9 @@ class KiCadLibrary(object):
         for sheet in self.schemas[subschema].sheets:
             logger.debug("Loading hierarchical subsheet {0} -> {1}".
                          format(sheet.fields[0]['value'], sheet.fields[1]['value']))
-            # Fixme: File name resolve relative to currently loaded sheet.
-            self.load_schema("../Brainfuck mainboard/%s"%re.sub(r'"', '', sheet.fields[1]['value']),
+            self.load_schema(self._resolve_filename(
+                re.sub(r'"', '', sheet.fields[1]['value']),
+                self._resolve_filename(filename)),
                              sheet.fields[0]['value'])
 
     def add_component_library_path(self, paths):
@@ -132,6 +147,7 @@ class KiCadLibrary(object):
             for path in paths:
                 self.add_component_library_path(path)
         else:
+            paths = self._resolve_filename(paths)
             if os.path.exists(paths):
                 self.component_library_search_paths.insert(0, paths)
                 logger.debug("Prepended [{0}] to component library search path.".
@@ -159,10 +175,6 @@ class KiCadLibrary(object):
         | `Load Component Library` | `../kicad_libs/LIB_UM245R/UM245R.lib` |
         | `Suite Setup` | `Load Component Library` | `74xx` |
         """
-
-        # Fixme: If we supply a path  instead of a mnemonic name, that
-        # path  will go  as index  for the  component_libraries array,
-        # which is incorrect.
         if isinstance(library, list):
             ret = []
             for lib in library:
@@ -170,23 +182,29 @@ class KiCadLibrary(object):
             return ret
         else:
             library = re.sub(r"[.]lib$", "", library)
-            if library not in self.component_libraries:
-                for path in self.component_library_search_paths:
-                    candidate = os.path.join(path, "{0}.lib".format(library))
+            libname = os.path.basename(library)
+            if libname not in self.component_libraries:
+                if os.path.isabs(library):
+                    sp = [os.path.dirname(library)]
+                else:
+                    sp = self.component_library_search_paths
+                for search_path in sp:
+                    candidate = os.path.join(self._resolve_filename(search_path),
+                                             "{0}.lib".format(libname))
                     if os.path.exists(candidate):
                         logger.debug("Found requested library [{0}] at [{1}].".
                                      format(library, candidate))
                         old = sys.stderr
                         stderr_buf = StringIO.StringIO()
                         sys.stderr = stderr_buf
-                        self.component_libraries[library] \
+                        self.component_libraries[libname] \
                             = schlib.SchLib(os.path.abspath(candidate))
                         sys.stderr = old
                         if stderr_buf.getvalue():
                             raise AssertionError("{0}: {1}".format(library, stderr_buf.getvalue()))
-                        return self.component_libraries[library]
-                raise AssertionError("Failed to find component library [{0}.lib]".format(library))
-            return self.component_libraries[library]
+                        return self.component_libraries[libname]
+                raise AssertionError("Failed to find component library [{0}.lib]".format(libname))
+            return self.component_libraries[libname]
 
     def find_modules(self, modules=None, value=None,
                      reference=None, pad_netname=None):
