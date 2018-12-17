@@ -37,5 +37,10 @@ class BuildLibDoc(Command):
         for path in self.distribution.package_dir.values():
             sys.path.insert(0, path)
         for lib in self.libraries:
-            html_file = os.path.join(self.output_dir, lib + '.html')
+            from setuptools_scm import get_version
+            html_file = os.path.join(self.output_dir,
+                                     lib + '-' +
+                                     get_version(root='../../..',
+                                                 relative_to=__file__) +
+                                     '.html')
             robot.libdoc.libdoc(lib, html_file)
