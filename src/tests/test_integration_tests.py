@@ -3,4 +3,5 @@
 from robot import run_cli
 
 def test_run_integration_tests():
-    return run_cli(['examples/'], False)
+    if run_cli(['examples/'], False) is not 0:
+        raise AssertionError("Integration tests didn't return True.")
