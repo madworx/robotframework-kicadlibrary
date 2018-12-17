@@ -2,13 +2,13 @@ FROM ubuntu:bionic AS embryo
 
 MAINTAINER Martin Kjellstrand [https://www.github.com/madworx]
 
-RUN apt-get update \
-    && apt-get install --assume-yes software-properties-common \
+RUN apt-get -qq update \
+    && apt-get -qq install --assume-yes software-properties-common \
     && add-apt-repository -y ppa:js-reynaud/kicad-5 \
     && dpkg --purge software-properties-common \
     && apt-get autoremove -y \
-    && apt-get update
-RUN apt-get install --assume-yes --no-install-recommends kicad kicad-symbols kicad-footprints python python-pip
+    && apt-get -qq update
+RUN apt-get install -qq --assume-yes --no-install-recommends kicad kicad-symbols kicad-footprints python python-pip
 
 FROM embryo AS build
 #
@@ -24,7 +24,7 @@ RUN if [ -z "${KICADLIBRARY_VERSION}" ] ; then \
     ; fi
 
 RUN pip install setuptools wheel
-RUN apt-get install --assume-yes --no-install-recommends make
+RUN apt-get install -qq --assume-yes --no-install-recommends make
 
 COPY . /build
 WORKDIR /build
