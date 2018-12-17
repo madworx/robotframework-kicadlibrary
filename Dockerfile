@@ -27,8 +27,10 @@ RUN if [ -z "${KICADLIBRARY_VERSION}" ] ; then \
        ; exit 1 \
     ; fi
 
-RUN pip install setuptools wheel
-RUN apt-get install -qq --assume-yes --no-install-recommends make
+RUN echo "Installing setuptools and make into build environment..." \
+    && pip install setuptools wheel \
+    && apt-get install -qq --assume-yes --no-install-recommends \
+       make < /dev/null > /dev/null
 
 COPY . /build
 WORKDIR /build
