@@ -22,11 +22,14 @@ from kicad_library_utils.sch import sch
 # pylint: disable=R0201
 class KiCadLibrary(object):
     """This is  the KiCadLibrary  for interacting with  and validating
-    PCBs made in KiCAD / pcbnew.
+    PCBs made in [http://kicad-pcb.org/|KiCad EDA].
 
     It also  contains some  limited functionality to  pull information
     from  Eeschema module  library files  (.lib), e.g.  to be  able to
     validate logical pin names vs actual pad nets.
+
+    The   source   code   for   this   project   is   hosted  on
+    [https://github.com/madworx/robotframework-kicadlibrary/|GitHub].
     """
 
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
@@ -53,10 +56,8 @@ class KiCadLibrary(object):
 
         logger.debug("Initialized KiCadLibrary")
 
-
     def __prettyprint_reference(self, inst):
         return "[{0}]".format(inst.GetReference())
-
 
     def get_component_definition(self, component_type):
         """
