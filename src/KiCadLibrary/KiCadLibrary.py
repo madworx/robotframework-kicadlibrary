@@ -260,7 +260,6 @@ class KiCadLibrary(object):
         if self.schemas:
             for sheet_name in self.schemas:
                 for comp in self.schemas[sheet_name].components:
-                    # Fixme: This needs to be fixed in the library instead.
                     if '"{0}"'.format(module.GetReference()) == comp.fields[0]['ref']:
                         logger.debug("Found component {0}: {1}".
                                      format(module.GetReference(),
