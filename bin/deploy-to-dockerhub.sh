@@ -3,6 +3,7 @@
 export TAGGED_VERSION="$(git describe --exact-match HEAD 2>/dev/null)"
 export DOCKER_USERNAME="$1"
 export DOCKER_PASSWORD="$2"
+export GH_TOKEN="$3"
 
 # Test: Always deploy to github pages:
 source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/publish-to-github-pages/src/cd-ci-glue.bash')
