@@ -41,8 +41,8 @@ class BuildLibDoc(Command):
                 ver = os.environ['KICADLIBRARY_VERSION']
             else:
                 from setuptools_scm import get_version
-                ver =  get_version(root='../../..', relative_to=__file__) 
+                ver = get_version(root='../../..', relative_to=__file__) 
             html_file = os.path.join(self.output_dir,
                                      lib + '-' +
-                                    ver + '.html')
+                                     ver + '.html')
             robot.libdoc.libdoc(lib, html_file)
