@@ -12,7 +12,8 @@ dist: clean tests
 
 docker:
 	export KICADLIBRARY_VERSION="$$(python setup.py --get-version)" ; \
-	docker build -t "madworx/robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION .
+	export VCS_REF="$$(git rev-parse --short HEAD)" ; \
+	docker build -t "madworx/robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION --build-arg=VCS_REF .
 
 docker-extract-artifacts:
 	export KICADLIBRARY_VERSION="$$(python setup.py --get-version)" ; \

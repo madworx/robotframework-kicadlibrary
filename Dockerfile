@@ -2,6 +2,11 @@ FROM ubuntu:bionic AS embryo
 
 MAINTAINER Martin Kjellstrand [https://www.github.com/madworx]
 
+ARG VCS_REF
+LABEL org.label-schema.vcs-url="https://github.com/madworx/robotframework-kicadlibrary/" \
+      org.label-schema.vcs-ref=${VCS_REF} \
+      maintainer="Martin Kjellstrand [https://www.github.com/madworx]"
+
 RUN echo "Adding 'ppa:ja-reynaud/kicad-5' repository and installing..." \
     && apt-get -qq update < /dev/null > /dev/null \
     && apt-get -qq install --assume-yes software-properties-common < /dev/null > /dev/null \
