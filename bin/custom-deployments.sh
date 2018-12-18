@@ -10,7 +10,9 @@ if [[ ! -z "${TAGGED_VERSION}" ]] ; then
     echo ""
     echo "Deploying to Docker Hub."
     source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash')
+    docker tag "madworx/robotframework-kicadlibrary:${TAGGED_VERSION}" "madworx/robotframework-kicadlibrary:latest"
     dockerhub_push_image "madworx/robotframework-kicadlibrary:${TAGGED_VERSION}"
+    dockerhub_push_image "madworx/robotframework-kicadlibrary:latest"
     dockerhub_set_description 'madworx/robotframework-kicadlibrary' README.md
 
     echo "Publishing generated documentation to GitHub Pages."
