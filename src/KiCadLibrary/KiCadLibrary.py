@@ -279,13 +279,9 @@ class KiCadLibrary(object):
 
     def _get_pins_for_component(self, component_name, pin_name=None):
         comp = self.get_component_definition(component_name)
-        if comp is not None:
-            return {p["num"]: p for p in comp.pins
-                    if pin_name is None
-                    or re.match(pin_name, p["name"])}
-        raise AssertionError(("Attempting to lookup pins for [{0}], but could "
-                              "not find the component in any specified or "
-                              "loaded libraries.".format(component_name)))
+        return {p["num"]: p for p in comp.pins
+                if pin_name is None
+                or re.match(pin_name, p["name"])}
 
     def find_modules_by_reference(self, regexp):
         """*DEPRECATED!!* Use keyword `Find Modules` instead.
@@ -326,9 +322,9 @@ class KiCadLibrary(object):
         | `${bus_connectors}=` |  `Intersect Modules By Reference` | `${connectors}` | `${connectors2}` |
         """
 
-        if list1 is None:
+        if not bool(list1):
             return list2
-        if list2 is None:
+        if not bool(list2):
             return list1
 
         list1_ref_set = set(m.GetReference() for m in list1)
@@ -340,15 +336,18 @@ class KiCadLibrary(object):
         """
         return {p.GetPadName(): p.GetShortNetname() for p in module.Pads()}
 
-    def modules_should_have_same_pads_and_netnames(self, modules=None,
-                                                   value=None,
-                                                   reference=None,
-                                                   pad_netname=None):
+    def matching_modules_should_have_same_pads_and_netnames(self, modules=None,
+                                                            value=None,
+                                                            reference=None,
+                                                            pad_netname=None):
         """Verify  that  all  modules qualifying  any  argument  being
         non-None, have  the same number of  pads, as well as  the same
         net-names for each pad.
 
         One usage of this is to validate inter-PCB connectors.
+
+        **this keyword does not validate net names given in the
+        schema versus the PCB.**
 
         Examples:
         | `Modules Should Have Same Pads And Netnames` | `reference=^J[0-9]+$` |
@@ -370,6 +369,7 @@ class KiCadLibrary(object):
                     aggregates[pad.GetPadName()][pad.GetShortNetname()] + 1
 
         for mod in modlist:
+            # All matching modules should have the same pin-count:
             if mod.GetPadCount() is not len(aggregates.keys()):
                 ret = False
                 logger.error("Module {0} has unexpected pad count: {1} (should be {2})".
@@ -423,14 +423,14 @@ class KiCadLibrary(object):
         ret = True
         modlist = self.find_modules(modules, value, reference, pad_netname)
         for mod in modlist:
-            if float(mod.GetOrientation()) != float(orientation):
+            mod_orient = float(mod.GetOrientation()) / 10.0
+            if mod_orient != float(orientation):
                 logger.error("Orientation of component %s is %s, should be %s."
-                             % (mod, mod.GetOrientation(),
-                                orientation))
+                             % (mod, mod_orient, orientation))
                 ret = False
             else:
                 logger.info("Orientation of component {0} is {1}".
-                            format(mod, mod.GetOrientation()))
+                            format(mod, mod_orient))
         if not ret:
             raise AssertionError("Component orientation(s) are wrong")
 
@@ -510,8 +510,6 @@ class KiCadLibrary(object):
             value = float(m_match.group(1)) * 1e6
         elif m_match.group(2) == "mil":
             value = self._miltomm(m_match.group(1)) * 1e6
-        else:
-            raise AssertionError("Unexpected internal error")
         return value
 
     def _miltomm(self, mil):
