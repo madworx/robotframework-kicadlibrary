@@ -37,7 +37,6 @@ deploy:
     skip_cleanup: true
     overwrite: true
     on:
-      repo: madworx/robotframework-kicadlibrary
       tags: true
       all_branches: true
 
@@ -48,7 +47,6 @@ deploy:
     skip_cleanup: true
     overwrite: true
     on:
-      repo: madworx/robotframework-kicadlibrary
       tags: true
       all_branches: true
 
@@ -56,7 +54,6 @@ deploy:
     script: bash ./bin/custom-deployments.sh "${DOCKER_USERNAME}" "${DOCKER_PASSWORD}" "${GH_TOKEN}"
     skip_cleanup: true
     on:
-      repo: madworx/robotframework-kicadlibrary
       tags: true
       all_branches: true
 
