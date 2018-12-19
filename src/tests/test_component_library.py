@@ -6,9 +6,10 @@ import pytest
 from KiCadLibrary import KiCadLibrary
 
 lib = None
+test_dir = os.path.abspath(os.path.splitext(__file__)[0])
 
-def setup_function(function):
-    global lib
+def setup_function():
+    global lib, test_dir
     lib = KiCadLibrary()
 
 def test_get_comp_def_should_fail():
@@ -77,11 +78,12 @@ def test_load_missing_component_lib_should_fail():
         lib.load_component_library('/non-existant.adfkjdsaflkj')
 
 def test_load_missingdcm_component_lib_should_fail():
-    test_dir = os.path.abspath(os.path.splitext(__file__)[0])
     with pytest.raises(AssertionError, match=r'.*DCM file.+does not exist'):
         lib.load_component_library(test_dir+'/missing_dcm.lib')
 
 def test_load_invalid_component_lib_should_fail():
-    test_dir = os.path.abspath(os.path.splitext(__file__)[0])
     with pytest.raises(AssertionError, match='not a KiCad Schematic Library File'):
         lib.load_component_library(test_dir+'/invalid.lib')
+
+def test_load_valid_relative_component_lib_should_work():
+    lib.load_component_library(test_dir+'/valid.lib')

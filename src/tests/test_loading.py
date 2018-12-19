@@ -8,7 +8,7 @@ from KiCadLibrary import KiCadLibrary
 
 lib = None
 
-def setup_function(function):
+def setup_function():
     global lib
     lib = KiCadLibrary()
 
