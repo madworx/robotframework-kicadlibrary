@@ -34,16 +34,16 @@ class KiCadLibrary(object):
     == Terminology ==
 
     * _Module_ refers to components having been placed onto the PCB.
-    
+
     * _Pads_ refers to the pads ("pins") on the modules placed on the PCB.
-    
-    * _Pins_ refers to the corresponding pin-out defined in KiCad 
+
+    * _Pins_ refers to the corresponding pin-out defined in KiCad
     libraries (e.g. `74xx`) for a given module.
 
     * _Reference_ is the main identity of the component in the design,
     such as `U1`, `R242` or `J_42`.
 
-    * _Value_ is the component type name, such as `74LS04`, `R`, 
+    * _Value_ is the component type name, such as `74LS04`, `R`,
     `Conn_02x02_Counter_Clockwise` or `GND`.
 
     == Finding modules ==
