@@ -28,6 +28,7 @@ def test_module_intersection():
     list2 = lib.find_modules(reference="nonexistent")
     assert lib.intersect_modules_by_reference(list1, list2) == list1
     assert lib.intersect_modules_by_reference(list2, list1) == list1
+    assert lib.intersect_modules_by_reference(list1, list1) == list1
 
 def test_module_pads_should_have_same_netnames_should_fail():
     with pytest.raises(AssertionError, match=r'have matching pad'):

@@ -335,6 +335,17 @@ class KiCadLibrary(object):
         """
         return {p.GetPadName(): p.GetShortNetname() for p in module.Pads()}
 
+    def modules_should_have_same_pads_and_netnames(self, modules=None,
+                                                   value=None,
+                                                   reference=None,
+                                                   pad_netname=None):
+        """*DEPRECATED!!* This keyword has been renamed to
+        `Matching Modules Should Have Same Pads And Netnames`."""
+        self.matching_modules_should_have_same_pads_and_netnames(modules,
+                                                                 value,
+                                                                 reference,
+                                                                 pad_netname)
+
     def matching_modules_should_have_same_pads_and_netnames(self, modules=None,
                                                             value=None,
                                                             reference=None,
@@ -343,10 +354,11 @@ class KiCadLibrary(object):
         non-None, have  the same number of  pads, as well as  the same
         net-names for each pad.
 
-        One usage of this is to validate inter-PCB connectors.
+        One usage of this is to validate that inter-PCB connectors have
+        the same pinouts.
 
-        **this keyword does not validate net names given in the
-        schema versus the PCB.**
+        *This keyword does not validate net names given in the
+        schema versus the PCB.*
 
         Examples:
         | `Modules Should Have Same Pads And Netnames` | `reference=^J[0-9]+$` |
