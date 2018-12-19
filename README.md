@@ -6,7 +6,7 @@
 
 A [Robot Framework](http://robotframework.org/) library for validating [KiCad](http://kicad-pcb.org/) designs.
 
-Releases are available via regular [PyPI](https://pypi.org/project/robotframework-kicadlibrary/) as well as [GitHib releases](https://github.com/madworx/robotframework-kicadlibrary/releases). Example projects/usage is available under the examples/ sub-directory.
+Releases are available via regular [PyPI](https://pypi.org/project/robotframework-kicadlibrary/) as well as [GitHib releases](https://github.com/madworx/robotframework-kicadlibrary/releases). Example projects/usage is available under the `examples/` sub-directory.
 
 [Keyword documentation](https://madworx.github.io/robotframework-kicadlibrary/KiCadLibrary.html) is available online, as well as downloadable via [GitHub Releases](https://github.com/madworx/robotframework-kicadlibrary/releases/latest).
 

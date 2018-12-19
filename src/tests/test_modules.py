@@ -2,6 +2,7 @@
 
 import os
 import pytest
+import mock
 
 from KiCadLibrary import KiCadLibrary
 
@@ -60,3 +61,10 @@ def test_modules_should_have_orientation_should_fail():
 def test_modules_should_have_orientation_should_work():
     lib.modules_should_have_orientation(0, value='LM555')
     lib.modules_should_have_orientation(90, reference=r'U3')
+
+def test_internal_error_get_component_pins_for_module():
+    lib.load_schema(test_dir+'/test_modules.sch')
+    module = lib.find_modules(reference=r'U1')[0]
+    module.GetReference = mock.MagicMock(return_value="error")
+    with pytest.raises(AssertionError, match=r"we couldn't find it\?!"):
+        lib.get_component_pins_for_module(module)
