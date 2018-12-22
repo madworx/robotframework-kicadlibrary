@@ -12,7 +12,7 @@ Reference pins should be correctly connected to data bus
 
 VDD Pins should be connected to VDD
     [Documentation]     Modules with schematic pins named VDD should
-    \    ...            be connected to VDD net. 
+    \    ...            be connected to VDD net.
     ${components}=    Find Modules    value=.*
     :FOR    ${component}    IN    @{components}
     \    Reference Pins Should Be Connected To Correct Net
@@ -20,7 +20,7 @@ VDD Pins should be connected to VDD
 
 GND Pins should be connected to GND
     [Documentation]     Modules with schematic pins named GND should
-    \    ...            be connected to GND net. 
+    \    ...            be connected to GND net.
     ${components}=    Find Modules    value=.*
     :FOR    ${component}    IN    @{components}
     \    Reference Pins Should Be Connected To Correct Net

@@ -28,41 +28,45 @@ class KiCadLibrary(object):
     from  Eeschema module  library files  (.lib), e.g.  to be  able to
     validate logical pin names vs actual pad nets.
 
-    The   source   code   for   this   project   is   hosted  on
-    [https://github.com/madworx/robotframework-kicadlibrary/|GitHub].
-
     == Terminology ==
+    - _Module_ refers to components having been placed onto the PCB.
+    - _Pads_ refers to the pads ("pins") on the modules placed on the PCB.
+    - _Pins_ refers to the corresponding pin-out defined in KiCad
+      libraries (e.g. `74xx`) for a given module.
+    - _Reference_ is the main identity of the component in the design,
+      such as `U1`, `R242` or `J_42`.
+    - _Value_ is the component type name, such as `74LS04`, `R`,
+      `Conn_02x02_Counter_Clockwise` or `GND`.
+    - _Pad netname_ is the named net assigned to a specific pin. E.g. `GND`, `a6` et.al.
 
-    * _Module_ refers to components having been placed onto the PCB.
-
-    * _Pads_ refers to the pads ("pins") on the modules placed on the PCB.
-
-    * _Pins_ refers to the corresponding pin-out defined in KiCad
-    libraries (e.g. `74xx`) for a given module.
-
-    * _Reference_ is the main identity of the component in the design,
-    such as `U1`, `R242` or `J_42`.
-
-    * _Value_ is the component type name, such as `74LS04`, `R`,
-    `Conn_02x02_Counter_Clockwise` or `GND`.
-
-    == Finding modules ==
+    == Selecting / finding modules ==
     Generally, all keywords in this library uses regular expressions
     for matching, and take a number of options as argument, namely
     `value`, `reference` and `pad_netname`.
 
-    To ensure that all resistors in a design are placed on an even
-    50 mil grid, the following keyword could be used:
+    The results of the individual options are intersected (logical AND).
+
+    Example: To ensure that all resistors in a design are placed on
+    an even 50 mil grid, the following keyword invocation could be used:
 
     | `Module Pads Should Be On Grid` | 50 mil | value=R |
 
-    To ensure that all connectors related to the ISA-bus are on an
-    even 100 mil boundary, the following keyword could be used:
-    (Assuming that the connectors in question have the string "ISA"
-    in their component reference)
+    Example: To ensure that all connectors related to the ISA-bus are
+    placed on an even 100 mil boundary, the following keyword could be
+    used: (Assuming that the connectors in question have the string
+    "ISA" in their component reference, such as `J_ISA_4`)
 
-    | `Module Pads Should Be On Grid` | 50 mil | value=Conn.* | reference=.*ISA.* |
+    | `Module Pads Should Be On Grid` | 100 mil | value=Conn.* | reference=.*ISA.* |
 
+    == Policy on deprecated keywords ==
+
+    == Getting involved ==
+    The   source   code   for   this   project   is   hosted  on
+    [https://github.com/madworx/robotframework-kicadlibrary/|GitHub].
+
+    Any and all suggestions for improvements can be submitted as
+    [https://github.com/madworx/robotframework-kicadlibrary/issues|issues]
+    or [https://github.com/madworx/robotframework-kicadlibrary/pulls|pull-requests].
     """
 
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
@@ -394,10 +398,10 @@ class KiCadLibrary(object):
         schema versus the PCB.*
 
         Examples:
-        | `Modules Should Have Same Pads And Netnames` | `reference=^J[0-9]+$` |
-        | `Modules Should Have Same Pads And Netnames` | `value=Conn_02x20_Odd_Even` |
+        | `Matching Modules Should Have Same Pads And Netnames` | `reference=^J[0-9]+$` |
+        | `Matching Modules Should Have Same Pads And Netnames` | `value=Conn_02x20_Odd_Even` |
         | `${modules}=` | `Find Modules By Value` | `Conn_02x20_Odd_Even` |
-        | `Modules Should Have Same Pads And Netnames` | `modules=${modules}` |
+        | `Matching Modules Should Have Same Pads And Netnames` | `modules=${modules}` |
         """
         modlist = self.find_modules(modules, value, reference, pad_netname)
         ret = True
@@ -558,5 +562,5 @@ class KiCadLibrary(object):
 
     def _miltomm(self, mil):
         mil = float(mil)
-        millimeter = mil * 25.4/1000
+        millimeter = mil * 25.4/1000.0
         return millimeter

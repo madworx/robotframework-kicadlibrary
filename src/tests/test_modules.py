@@ -36,6 +36,7 @@ def test_module_pads_should_have_same_netnames_should_fail():
 
 def test_module_pads_should_have_same_netnames_should_work():
     lib.matching_modules_should_have_same_pads_and_netnames(value='LM555')
+    lib.modules_should_have_same_pads_and_netnames(value='LM555')
 
 def test_find_modules_by_netname():
     l = lib.find_modules(pad_netname='CV')
