@@ -344,13 +344,14 @@ class KiCadLibrary(object):
 
     def intersect_modules_by_reference(self, list1, list2):
         # pylint: disable=line-too-long
-        """*DEPRECATED!!* Use keyword `Find Modules` instead.
-
-        Perform a set intersection of the two module lists ``list1`` and
-        ``list2`` based on the module ``references``. (I.e. returns a new
-        list containing only the modules that exist in both lists.
+        """Perform a set intersection of the two module lists ``list1``
+        and ``list2`` based on the module ``references``. (I.e. returns
+        a new list containing only the modules that exist in both lists.
         If either of the two lists are equal to `None`, the other
         argument will be returned.
+
+        *You normally don't need to use this keyword, see documentation
+        on module selection.*
 
         Examples:
         | `${connectors}=`     |  `Find Modules By Value`          | `Conn_02x20_Odd_Even` |
@@ -365,6 +366,27 @@ class KiCadLibrary(object):
 
         list1_ref_set = set(m.GetReference() for m in list1)
         return [m for m in list2 if m.GetReference() in list1_ref_set]
+
+    def complement_modules_by_reference(self, list1, list2):
+        # pylint: disable=line-too-long
+        """Perform a set complement operation on the two module lists
+        ``list1``  and ``list2`` based on the module ``references``.
+        (I.e. returns a new list containing only the modules that exist
+        in ``list1`` but not in ``list2``)
+
+        Examples:
+        | `${connectors}=` | `Find Modules By Value` | `Conn_02x20_Odd_Even` |
+        | `${connectors2}=` | `Find Modules By Reference` | `regexp=^J[0-9]+$` |
+        | `${non_bus_connectors}=` | `Complement Modules By Reference` | `${connectors}` | `${connectors2}` |
+        """
+
+        if not bool(list1):
+            return []
+        if not bool(list2):
+            return list1
+
+        list2_ref_set = set(m.GetReference() for m in list2)
+        return [m for m in list1 if m.GetReference() not in list2_ref_set]
 
     def get_pad_netnames_for_module(self, module):
         """Return  a _dict_  mapping pad  names to  the short  form of
@@ -457,6 +479,30 @@ class KiCadLibrary(object):
                     ret.append(mod)
         return ret
 
+    # pylint: disable=too-many-arguments,line-too-long
+    def modules_should_have_values_matching(self, matching, modules=None,
+                                            value=None, reference=None,
+                                            pad_netname=None):
+        """Validate that the selected modules have values matching the
+        regular expression given in `matching`.
+
+        This can be used, for example, to validate that all resistors
+        have been given a value which looks like an actual ohm value.
+
+        Examples:
+        | `Modules Should Have Values Matching` | `[0-9]+(.[0-9]+)? *([kM])?$` | `reference=R[0-9]+` |
+        | `Modules Should Have Values Matching` | `[0-9]+(.[0-9]+)? *[munp]?F$` | `reference=C[0-9]+` |
+        """
+        modlist = self.find_modules(modules, value, reference, pad_netname)
+        ret = True
+        for mod in modlist:
+            if not re.match(matching, mod.GetValue()):
+                logger.error("Module {0} has invalid value [{1}]."
+                             .format(mod, mod.GetValue()))
+                ret = False
+        if not ret:
+            raise AssertionError("Modules with incorrect values detected.")
+
     # pylint: disable=too-many-arguments
     def modules_should_have_orientation(self, orientation, modules=None,
                                         value=None, reference=None,
@@ -473,14 +519,14 @@ class KiCadLibrary(object):
         for mod in modlist:
             mod_orient = float(mod.GetOrientation()) / 10.0
             if mod_orient != float(orientation):
-                logger.error("Orientation of component %s is %s, should be %s."
+                logger.error("Orientation of module %s is %s, should be %s."
                              % (mod, mod_orient, orientation))
                 ret = False
             else:
-                logger.info("Orientation of component {0} is {1}".
+                logger.info("Orientation of module {0} is {1}".
                             format(mod, mod_orient))
         if not ret:
-            raise AssertionError("Component orientation(s) are wrong")
+            raise AssertionError("Module orientation(s) are wrong")
 
     def _get_all_edge_cuts(self):
         """Return a dict of all edge cuts"""
