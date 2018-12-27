@@ -63,7 +63,7 @@ To create a release please follow this outline:
 
 ### If you have commit access to the main repository
 
-* Once build hooks at Github/Sonarcloud/pyup etc have completed, tag a pre-release (`x.y.zpre0`)
+* Once build hooks at Github/Sonarcloud/pyup etc have completed, tag a pre-release (`x.y.zrc0`)
 * If that build completes, perform a PR into `master`, squashing the commit history.
 * Tag the `master` branch with the new release version, ahdering to semantic versioning.
 * Remove any `pre` artifacts from Docker Hub and PyPI.
