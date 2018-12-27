@@ -52,3 +52,22 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details
+
+## Developer information / Preparing a release
+
+To create a release please follow this outline:
+
+* Do your development work in a separate branch.
+* Write unit-tests (`tests/`) and/or integration tests (`examples/`) for your code.
+* Once all local tests validate, and you have 100% code coverage, push to GitHub.
+
+### If you have commit access to the main repository
+
+* Once build hooks at Github/Sonarcloud/pyup etc have completed, tag a pre-release (`x.y.zrc0`)
+* If that build completes, perform a PR into `master`, squashing the commit history.
+* Tag the `master` branch with the new release version, ahdering to semantic versioning.
+* Remove any `pre` artifacts from Docker Hub and PyPI.
+
+### If you don't have commit access to the main repository
+
+* Submit a PR towards the `master` branch of the [main repository](https://github.com/madworx/robotframework-kicadlibrary/).

@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:test_modules-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
@@ -169,6 +168,50 @@ F 1 "8255" H 8500 5387 50  0000 C CNN
 F 2 "Package_DIP:DIP-40_W15.24mm" H 8500 4000 50  0001 C CNN
 F 3 "http://aturing.umcs.maine.edu/~meadow/courses/cos335/Intel8255A.pdf" H 8500 4000 50  0001 C CNN
 	1    8500 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 5C24FA6F
+P 2800 4350
+F 0 "R1" H 2870 4396 50  0000 L CNN
+F 1 "10k" H 2870 4305 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0922_L20.0mm_D9.0mm_P7.62mm_Vertical" V 2730 4350 50  0001 C CNN
+F 3 "~" H 2800 4350 50  0001 C CNN
+	1    2800 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 5C24FAD5
+P 3100 4350
+F 0 "R2" H 3170 4396 50  0000 L CNN
+F 1 "330" H 3170 4305 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0922_L20.0mm_D9.0mm_P7.62mm_Vertical" V 3030 4350 50  0001 C CNN
+F 3 "~" H 3100 4350 50  0001 C CNN
+	1    3100 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 5C24FB07
+P 3400 4350
+F 0 "R3" H 3470 4396 50  0000 L CNN
+F 1 "2 M" H 3470 4305 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0922_L20.0mm_D9.0mm_P7.62mm_Vertical" V 3330 4350 50  0001 C CNN
+F 3 "~" H 3400 4350 50  0001 C CNN
+	1    3400 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 5C24FB98
+P 3700 4350
+F 0 "R4" H 3770 4396 50  0000 L CNN
+F 1 "0.1uF" H 3770 4305 50  0000 L CNN
+F 2 "Resistor_THT:R_Axial_DIN0922_L20.0mm_D9.0mm_P7.62mm_Vertical" V 3630 4350 50  0001 C CNN
+F 3 "~" H 3700 4350 50  0001 C CNN
+	1    3700 4350
 	1    0    0    -1  
 $EndComp
 Wire Bus Line
