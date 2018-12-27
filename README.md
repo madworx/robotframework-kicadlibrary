@@ -14,13 +14,30 @@ Releases are available via regular [PyPI](https://pypi.org/project/robotframewor
 
 ### Prerequisites
 
-You'll need an installation of Python, as well as `pip`. Please see your operating systems documentation on how to install those tools.
+You'll need an installation of Python, as well as `pip` and a working
+installation of KiCad. Please consult your operating system
+documentation on how to install these tools.
 
-You will also need Robot Framework installed, but if you install using `pip`, robot framework will automatically be installed for you.
+You will also need Robot Framework installed, but if you're installing
+using `pip`, Robot Framework will automatically be installed for you.
 
-### Installing
+### Installing KiCad, PIP and the library
 
-Installing using pip:
+This is dependent on your local operating system, but if you'te running
+any form of Unix-clone, it should typically be something in the lines of:
+
+```
+# Debian based systems
+$ sudo apt-get install python-pip kicad
+$ sudo pip install robotframework-kicadlibrary
+
+# RedHat based systems:
+$ sudo yum -y install epel-release
+$ sudo yum -y install python-pip kicad
+$ sudo pip install robotframework-kicadlibrary
+```
+
+### Installing using PIP with existing environment
 
 ```
 $ pip install robotframework-kicadlibrary
@@ -67,6 +84,8 @@ To create a release please follow this outline:
 * If that build completes, perform a PR into `master`, squashing the commit history.
 * Tag the `master` branch with the new release version, ahdering to semantic versioning.
 * Remove any `pre` artifacts from Docker Hub and PyPI.
+* Delete the `rc*` tags from the repository.
+  `git tag -d x.y.zrcN`, followed by `git push origin :x.y.zpreN`.
 
 ### If you don't have commit access to the main repository
 
