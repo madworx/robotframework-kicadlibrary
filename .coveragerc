@@ -1,5 +1,5 @@
 [run]
-omit = src/KiCadLibrary/kicad_library_utils/*
+omit = src/KiCadLibrary/kicad_library_utils/*,**/__main__.py
 data_file = build/.coverage
 
 [html]
