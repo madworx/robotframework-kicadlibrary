@@ -2,4 +2,5 @@
 persistent=yes
 jobs=1
 disable=
-   duplicate-code
+   duplicate-code,
+   useless-object-inheritance

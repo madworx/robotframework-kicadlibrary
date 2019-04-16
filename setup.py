@@ -12,8 +12,13 @@ pytest_runner = ['pytest-runner','pytest<5'] if needs_pytest else []
 
 if "--get-version" in sys.argv:
     from setuptools_scm import get_version
-    print get_version(root='.', relative_to=__file__)
+    print(get_version(root='.', relative_to=__file__))
     sys.exit(0)
+
+if sys.version_info >= (3,2):
+    special_test_requires = ['pytest','pylint>=2']
+else:
+    special_test_requires = ['pytest<5','pylint<2']
 
 setup(name='robotframework-kicadlibrary',
       description='Robot Framework KiCAD library',
@@ -32,9 +37,9 @@ setup(name='robotframework-kicadlibrary',
       package_dir={'': 'src'},
       install_requires=['robotframework<4'],
       setup_requires=['setuptools_scm', 'robotframework<4'] + pytest_runner,
-      tests_require=['pytest-runner', 'pytest<5', 'pytest-cov', 'pytest-mock',
-                     'pylint<2.0.0', 'pytest-pylint', 'coverage', 'pytest-html',
-                     'setuptools_scm', 'robotframework<4'],
+      tests_require=['pytest-runner', 'pytest-cov', 'pytest-mock', 'coverage',
+                     'pytest-pylint', 'pytest-html', 'setuptools_scm',
+                     'robotframework<4','mock'] + special_test_requires,
       test_suite='tests',
       cmdclass = {'build_rf_docs': setup_command.BuildLibDoc},
       zip_safe = True,

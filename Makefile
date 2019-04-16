@@ -5,7 +5,7 @@ all: tests doc
 setup:
 
 tests: setup
-	python setup.py test
+	LC_CTYPE=C.UTF8 python setup.py test
 
 dist: clean tests
 	python setup.py sdist bdist_wheel
@@ -13,7 +13,7 @@ dist: clean tests
 docker:
 	export KICADLIBRARY_VERSION="$$(python setup.py --get-version)" ; \
 	export VCS_REF="$$(git rev-parse --short HEAD)" ; \
-	docker build -t "madworx/robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION --build-arg=VCS_REF .
+	docker build -t "madworx/robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION --build-arg=VCS_REF --build-arg=PYTHON_VERSION .
 
 docker-extract-artifacts:
 	export KICADLIBRARY_VERSION="$$(python setup.py --get-version)" ; \

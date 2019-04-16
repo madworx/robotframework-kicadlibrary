@@ -25,9 +25,12 @@ def test_parse_invalid_dimstr_should_fail():
         lib._parse_dimension_string('asdfslkjsafds')
     with pytest.raises(ValueError, match=r'could not convert string to float'):
         lib._parse_dimension_string('')
-    with pytest.raises(ValueError, match=r'invalid literal for float'):
+    with pytest.raises(ValueError, match=r'invalid literal for float'
+                       '|could not convert string to float'):
         lib._parse_dimension_string('2.45 feet')
-    with pytest.raises(ValueError, match=r'invalid literal for float'):
+    with pytest.raises(ValueError, match=r'invalid literal for float'
+                       '|could not convert string to float'):
         lib._parse_dimension_string('1,27')
-    with pytest.raises(ValueError, match=r'invalid literal for float'):
+    with pytest.raises(ValueError, match=r'invalid literal for float'
+                       '|could not convert string to float'):
         lib._parse_dimension_string('1,27 mil')

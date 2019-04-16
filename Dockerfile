@@ -1,22 +1,32 @@
+ARG DEBUG_APT=/dev/stdout
+
 FROM ubuntu:bionic AS embryo
 
 MAINTAINER Martin Kjellstrand [https://www.github.com/madworx]
 
+ARG PYTHON_VERSION
 ARG VCS_REF
+ARG DEBUG_APT
 LABEL org.label-schema.vcs-url="https://github.com/madworx/robotframework-kicadlibrary/" \
       org.label-schema.vcs-ref=${VCS_REF} \
       maintainer="Martin Kjellstrand [https://www.github.com/madworx]"
 
-RUN echo "Adding 'ppa:ja-reynaud/kicad-5' repository and installing..." \
-    && apt-get -qq update < /dev/null > /dev/null \
-    && apt-get -qq install --assume-yes software-properties-common < /dev/null > /dev/null \
-    && add-apt-repository -y ppa:js-reynaud/kicad-5 < /dev/null > /dev/null \
-    && dpkg --purge software-properties-common < /dev/null > /dev/null \
-    && apt-get autoremove -y < /dev/null > /dev/null \
-    && apt-get -qq update < /dev/null > /dev/null \
-    && apt-get install -qq --assume-yes --no-install-recommends \
-                     kicad kicad-symbols kicad-footprints python \
-                     python-pip < /dev/null > /dev/null
+SHELL [ "/bin/bash", "-c" ]
+
+RUN if [[ "${PYTHON_VERSION}" == 3* ]] ; then PYPKG="python3" ; KIREPO="5.1" ; else PYPKG="python" ; KIREPO="5" ; fi \
+    && echo "Adding 'ppa:ja-reynaud/kicad-${KIREPO}' with '${PYPKG}'..." \
+    && apt-get -qq update < /dev/null > ${DEBUG_APT} \
+    && apt-get -qq install --no-install-recommends --assume-yes software-properties-common locales make < /dev/null > ${DEBUG_APT} \
+    && echo "C.UTF-8 UTF-8" > /etc/locale.gen && locale-gen \
+    && add-apt-repository -y ppa:js-reynaud/kicad-${KIREPO} < /dev/null > ${DEBUG_APT} \
+    && dpkg --purge software-properties-common < /dev/null > ${DEBUG_APT} \
+    && apt-get -qq update < /dev/null > ${DEBUG_APT} \
+    && apt-get install --assume-yes --no-install-recommends "${PYPKG}" "${PYPKG}-pip"  < /dev/null > ${DEBUG_APT} \
+    && if [[ "${PYTHON_VERSION}" == 3* ]] ; then ln -sf python3 /usr/bin/python ; ln -sf pip3 /usr/bin/pip ; fi \
+    && apt-get install -qq --assume-yes --no-install-recommends kicad kicad-symbols kicad-footprints < /dev/null > ${DEBUG_APT} \
+    && apt-get autoremove -y < /dev/null > ${DEBUG_APT} \
+    && apt-get update -o'Dir::Etc::SourceList=/dev/null' -o'Dir::Etc::SourceParts=/tmp' \
+    && apt-get clean
 
 FROM embryo AS build
 #
@@ -26,15 +36,14 @@ FROM embryo AS build
 # submodule (in which case the build would fail any way).
 #
 ARG KICADLIBRARY_VERSION
+ARG DEBUG_APT
 RUN if [ -z "${KICADLIBRARY_VERSION}" ] ; then \
        echo "FATAL: Build variable KICADLIBRARY_VERSION must be specified for docker builds!" 1>&2 \
        ; exit 1 \
     ; fi
 
-RUN echo "Installing setuptools and make into build environment..." \
-    && pip install setuptools setuptools_scm wheel \
-    && apt-get install -qq --assume-yes --no-install-recommends \
-       make < /dev/null > /dev/null
+RUN echo "Installing setuptools into build environment..." \
+    && pip install setuptools setuptools_scm wheel
 
 COPY . /build
 WORKDIR /build
@@ -63,7 +72,7 @@ COPY --from=build \
      /build/build/coverage.xml \
      /build/build/nosetests.xml \
      /build/
-     
+
 RUN pip install /build/*.whl
 RUN useradd --base-dir / \
             --system \

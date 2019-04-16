@@ -4,11 +4,14 @@ KiCad Library -  Robot Framework testing library  for validating KiCad
 Pcbnew/Eeschema designs.
 """
 
-import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 import sys
 import re
 import os
-import new
 
 import pcbnew
 
@@ -16,8 +19,16 @@ from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from robot.api import logger
 
 # pylint: disable=relative-import
-from kicad_library_utils.schlib import schlib
-from kicad_library_utils.sch import sch
+from .kicad_library_utils.schlib import schlib
+from .kicad_library_utils.sch import sch
+
+def prettyprint_reference(self):
+    """Print module reference (for __str__ et.al.)"""
+    return "[{0}]".format(self.GetReference())
+
+def hash_wxpoint(self):
+    """Enable hasing of wxPoint data structure"""
+    return hash((self.x, self.y))
 
 # pylint: disable=R0201
 class KiCadLibrary(object):
@@ -86,15 +97,13 @@ class KiCadLibrary(object):
             self.load_schema(schema)
 
         # Make pcbnew.MODULE object pretty print their reference.
-        pcbnew.MODULE.__str__ = new.instancemethod(
-            self.__prettyprint_reference, None, pcbnew.MODULE)
-        pcbnew.MODULE.__repr__ = new.instancemethod(
-            self.__prettyprint_reference, None, pcbnew.MODULE)
+        pcbnew.MODULE.__str__ = prettyprint_reference
+        pcbnew.MODULE.__repr__ = prettyprint_reference
+
+        # Make wxPoint hashable
+        pcbnew.wxPoint.__hash__ = hash_wxpoint
 
         logger.debug("Initialized KiCadLibrary")
-
-    def __prettyprint_reference(self, inst):
-        return "[{0}]".format(inst.GetReference())
 
     def get_component_definition(self, component_type):
         """
@@ -128,9 +137,8 @@ class KiCadLibrary(object):
             raise AssertionError("Could not locate component {0} in any "
                                  "of the loaded or named libraries.".
                                  format(component_type))
-        else:
-            raise AssertionError(
-                "Invalid format{0}".format(component_type))
+        raise AssertionError(
+            "Invalid format{0}".format(component_type))
 
     def load_pcb(self, filename):
         """Load a KiCAD / Pcbnew (.kicad_pcb) file."""
@@ -156,7 +164,7 @@ class KiCadLibrary(object):
                      format(filename))
         if subschema not in self.schemas:
             old = sys.stderr
-            stderr_buf = StringIO.StringIO()
+            stderr_buf = StringIO()
             sys.stderr = stderr_buf
             self.schemas[subschema] = sch.Schematic(self._resolve_filename(filename))
             sys.stderr = old
@@ -232,7 +240,7 @@ class KiCadLibrary(object):
                     logger.debug("Found requested library [{0}] at [{1}].".
                                  format(library, candidate))
                     old = sys.stderr
-                    stderr_buf = StringIO.StringIO()
+                    stderr_buf = StringIO()
                     sys.stderr = stderr_buf
                     self.component_libraries[libname] \
                         = schlib.SchLib(os.path.abspath(candidate))
