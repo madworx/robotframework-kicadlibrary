@@ -4,26 +4,25 @@ KiCad Library -  Robot Framework testing library  for validating KiCad
 Pcbnew/Eeschema designs.
 """
 
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
-
-import sys
-import re
 import os
+import re
+import sys
+from collections import defaultdict
+from io import StringIO
 
 import pcbnew
-
-from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
+from natsort import natsorted
 from robot.api import logger
+from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 
-from .kicad_library_utils.schlib import schlib
 from .kicad_library_utils.sch import sch
+from .kicad_library_utils.schlib import schlib
+
 
 def prettyprint_reference(self):
     """Print module reference (for __str__ et.al.)"""
-    return "[{0}]".format(self.GetReference())
+    return f"[{self.GetReference()}]"
+
 
 def hash_wxpoint(self):
     """Enable hasing of wxPoint data structure"""
@@ -159,8 +158,7 @@ class KiCadLibrary(object):
 
     def load_schema(self, filename, subschema='_root'):
         """Load a KiCAD / Eeschema (.sch) file."""
-        logger.debug("Loading eeschema file: [{0}]".
-                     format(filename))
+        logger.debug(f"Loading eeschema file: [{filename}]")
         if subschema not in self.schemas:
             old = sys.stderr
             stderr_buf = StringIO()
@@ -195,13 +193,11 @@ class KiCadLibrary(object):
             paths = self._resolve_filename(paths)
             if os.path.exists(paths):
                 self.component_library_search_paths.insert(0, paths)
-                logger.debug("Prepended [{0}] to component library search path.".
-                             format(paths))
+                logger.debug(f"Prepended [{paths}] to component library search path.")
             else:
-                raise AssertionError(str("Attempted to add [{0}] to component "
-                                         "library search path, but that path "
-                                         "doesn't exist.").
-                                     format(paths))
+                raise AssertionError(str(f"Attempted to add [{paths}] to"
+                                         " component library search path,"
+                                         " but that path doesn't exist."))
 
     def load_component_library(self, library):
         """
@@ -236,8 +232,7 @@ class KiCadLibrary(object):
                 candidate = os.path.join(self._resolve_filename(search_path),
                                          "{0}.lib".format(libname))
                 if os.path.exists(candidate):
-                    logger.debug("Found requested library [{0}] at [{1}].".
-                                 format(library, candidate))
+                    logger.debug(f"Found requested library [{library}] at [{candidate}].")
                     old = sys.stderr
                     stderr_buf = StringIO()
                     sys.stderr = stderr_buf
@@ -245,9 +240,9 @@ class KiCadLibrary(object):
                         = schlib.SchLib(os.path.abspath(candidate))
                     sys.stderr = old
                     if stderr_buf.getvalue():
-                        raise AssertionError("{0}: {1}".format(library, stderr_buf.getvalue()))
+                        raise AssertionError(f"{library}: {stderr_buf.getvalue()}")
                     return self.component_libraries[libname]
-            raise AssertionError("Failed to find component library [{0}.lib]".format(libname))
+            raise AssertionError(f"Failed to find component library [{libname}.lib]")
         return self.component_libraries[libname]
 
     def find_modules(self, modules=None, value=None,
@@ -602,6 +597,155 @@ class KiCadLibrary(object):
                 ret = False
         if not ret:
             raise AssertionError("Edge cuts not on grid detected.")
+
+    def _get_all_components_by_reference(self, schema, reference='.*'):
+        """Return a list of all components that exist in both
+        schema and pcbnew (optionally only matching reference).
+        """
+        t = {}
+        for m in schema.components:
+            t[m.labels['ref']] = m.labels['name']
+
+        ret = {}
+        for m in self.find_modules(reference=reference):
+            ret[m.GetReference()] = t[m.GetReference()]
+        return ret
+
+    def _get_noconns_by_schema(self, schema):
+        """Enumerate noconns in schema"""
+        noconns = defaultdict(dict)
+        for noconn in schema.noconns:
+            match = re.search(r'^NoConn ~ ([0-9]+) +([0-9]+)', noconn['desc'])
+            if match:
+                noconns[int(match.group(1))][int(match.group(2))] = True
+            else:
+                raise AssertionError(f"Could not parse NoConn definition \"{noconn['desc']}\".")
+        return noconns
+
+    def _get_rotation_for_component(self, component):
+        """Return a rotation angle for the given component.
+
+        The documentation around component orientation
+        is rather sparse, all I could find was (in schlib):
+
+        "oldstuff": ['\t1    5550 3450\n', '\t1    0    0    -1  \n']
+
+        From:
+        https://en.wikibooks.org/wiki/Kicad/file_formats#Description_of_a_component
+
+        A B C D ( orientation matrix with A, B, C, D = - 1, 0 or 1)
+        """
+        datamatrix = {
+            0:   [1, 0, 0, -1],
+            90:  [0, 1, 1, 0],
+            180: [-1, 0, 0, 1],
+            270: [0, -1, -1, 0]
+        }
+
+        rotation = -1
+        m = re.match(r'^\t(-?[01])\s+(-?[01])\s+(-?[01])\s+(-?[01])\s*$', component.old_stuff[1])
+        if m:
+            vals = [int(m.group(1)), int(m.group(2)), int(m.group(3)), int(m.group(4))]
+            for k in datamatrix:
+                if datamatrix[k] == vals:
+                    rotation = k
+                    break
+        else:
+            raise AssertionError(f"Could not parse component [{component.labels['ref']}] orientation information: [{component.old_stuff[1]}]")
+        if rotation == -1:
+            raise AssertionError(f"Could not identify component [{component.labels['ref']}] orientation: [{component.old_stuff[1]}]")
+        return rotation
+
+    def _get_pin_position(self, component, pin):
+        """Return a list of x, y coordinates for the given
+        component pin (depends on component rotation in sch)
+        """
+
+        rotation = self._get_rotation_for_component(component)
+        f = component.position
+
+        if rotation == 0:
+            posx = int(f['posx']) + int(pin['posx'])
+            posy = int(f['posy']) - int(pin['posy'])
+        elif rotation == 90:
+            posx = int(f['posx']) + int(pin['posy'])
+            posy = int(f['posy']) + int(pin['posx'])
+        elif rotation == 180:
+            posx = int(f['posx']) - int(pin['posx'])
+            posy = int(f['posy']) + int(pin['posy'])
+        elif rotation == 270:
+            posx = int(f['posx']) - int(pin['posy'])
+            posy = int(f['posy']) - int(pin['posx'])
+        else:
+            raise AssertionError(f"Unable to grok rotation [{rotation}].")
+        return [posx, posy]
+
+    def _return_unconnected_pins(self):
+        checked_components = 0
+        checked_pins = 0
+
+        ret = {}
+        ret['data'] = {}
+
+        # Only accept nets which have more than one connection.
+        viable_nets = set([str(net) for net in self.board.GetNetsByName()
+                           if self.board.GetNodesCount(
+                              int(self.board.FindNet(str(net)).GetNet())) > 1])
+
+        # TODO: Handle all schemas
+        s = self.schemas['_root']
+        noconns = self._get_noconns_by_schema(s)
+        ncsstr = ""
+        for noconn in sorted(noconns):
+            for y in sorted(noconns[noconn]):
+                ncsstr = ncsstr + f"{noconn};{y} "
+        logger.trace("Noconns: " + ncsstr)
+        cs = self._get_all_components_by_reference(s)
+        for component in s.components:
+            ref = component.labels['ref']
+            if ref in cs:
+                fpos = component.position
+                logger.trace(f"Component {ref}: {fpos['posx']};{fpos['posy']}")
+                component_def = self.get_component_definition(cs[ref])
+
+                assert len(self.find_modules(reference=ref)) == 1
+                module = self.find_modules(reference=ref)[0]
+
+                # TODO: Explain this better
+                # We only need to check a module if it has non-connected pads:
+                # Note: Empty GetName seems to indicates some form of mechanical connection, not an actual pad.
+                # TODO: Assert GetName always returns positive integers.
+                # TODO: Assert that number of pads equal number of pins.
+                # TODO: Assert we have both schema and PCB loaded.
+                pads_to_check = [pad.GetName() for pad in module.Pads()
+                                 if pad.GetName() \
+                                 and (not pad.GetShortNetname() \
+                                      or pad.GetNetname() not in viable_nets)]
+                if len(pads_to_check) > 0:
+                    checked_components = checked_components + 1
+                    for pad in pads_to_check:
+                        for pin in [pin for pin in component_def.pins
+                                    if int(pin['num']) == int(pad)]:
+                            checked_pins = checked_pins + 1
+                            pin_pos = self._get_pin_position(component, pin)
+                            if not (pin_pos[0] in noconns and pin_pos[1] in noconns[pin_pos[0]]):
+                                ret['data'][ref] = []
+                                ret['data'][ref].append(int(pin['num']))
+
+        ret['stats'] = {}
+        ret['stats']['checked_components'] = checked_components
+        ret['stats']['checked_pins'] = checked_pins
+        return ret
+
+    def module_pins_should_be_connected(self):
+        data = self._return_unconnected_pins()
+        logger.info(f"Checked {data['stats']['checked_components']} components"
+                    f" and {data['stats']['checked_pins']} component pins.")
+        for ref in natsorted(data['data']):
+            for pin in sorted(data['data'][ref]):
+                logger.error(f"Component {ref} pin {pin} is not connected.")
+        logger.error(data)
+        return data
 
     def _parse_dimension_string(self, string):
         m_match = re.search(r"^([0-9]+[0-9.].?[0-9]*)\s*(mil|mm)\s*$", string)

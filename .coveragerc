@@ -7,3 +7,4 @@ directory = build/htmlcov
 
 [xml]
 output = build/coverage.xml
+
