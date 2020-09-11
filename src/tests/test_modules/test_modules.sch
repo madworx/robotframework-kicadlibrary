@@ -1,5 +1,5 @@
 EESchema Schematic File Version 4
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -13,17 +13,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-$Comp
-L Timer:LM555 U1
-U 1 1 5C193005
-P 4200 2650
-F 0 "U1" H 4350 3150 50  0000 C CNN
-F 1 "LM555" H 4350 3050 50  0000 C CNN
-F 2 "Package_DIP:DIP-8_W7.62mm" H 4200 2650 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/lm555.pdf" H 4200 2650 50  0001 C CNN
-	1    4200 2650
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:VCC #PWR0101
 U 1 1 5C193F89
@@ -49,11 +38,11 @@ F 3 "" H 4200 3200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3700 2850 3600 2850
+	3700 2850 3650 2850
 Wire Wire Line
-	3700 2650 3600 2650
+	3700 2650 3650 2650
 Wire Wire Line
-	3700 2450 3600 2450
+	3700 2450 3650 2450
 Wire Wire Line
 	4800 2450 4700 2450
 Wire Wire Line
@@ -84,17 +73,6 @@ Text Label 3600 2650 0    50   ~ 0
 CV
 Text Label 3600 2450 0    50   ~ 0
 TR
-$Comp
-L Timer:LM555 U2
-U 1 1 5C1948AB
-P 5800 2650
-F 0 "U2" H 5950 3150 50  0000 C CNN
-F 1 "LM555" H 5950 3050 50  0000 C CNN
-F 2 "Package_DIP:DIP-8_W7.62mm" H 5800 2650 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/lm555.pdf" H 5800 2650 50  0001 C CNN
-	1    5800 2650
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:VCC #PWR0103
 U 1 1 5C1948B3
@@ -222,4 +200,35 @@ Wire Bus Line
 	5100 2350 5100 3050
 Wire Bus Line
 	6500 2350 6500 3050
+$Comp
+L Timer:NA555P U?
+U 1 1 5F5B5135
+P 4200 2650
+F 0 "U?" H 4200 3231 50  0000 C CNN
+F 1 "NA555P" H 4200 3140 50  0000 C CNN
+F 2 "Package_DIP:DIP-8_W7.62mm" H 4850 2250 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/ne555.pdf" H 5050 2250 50  0001 C CNN
+	1    4200 2650
+	1    0    0    -1  
+$EndComp
+Connection ~ 3650 2450
+Wire Wire Line
+	3650 2450 3600 2450
+Connection ~ 3650 2850
+Wire Wire Line
+	3650 2850 3600 2850
+Connection ~ 3650 2650
+Wire Wire Line
+	3650 2650 3600 2650
+$Comp
+L Timer:NA555P U?
+U 1 1 5F5B61C8
+P 5800 2650
+F 0 "U?" H 5800 3231 50  0000 C CNN
+F 1 "NA555P" H 5800 3140 50  0000 C CNN
+F 2 "Package_DIP:DIP-8_W7.62mm" H 6450 2250 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/ne555.pdf" H 6650 2250 50  0001 C CNN
+	1    5800 2650
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

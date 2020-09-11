@@ -24,23 +24,23 @@ def test_get_valid_module_pins_with_loaded_library_should_work():
     assert bool(pins)
 
 def test_module_intersection():
-    list1 = lib.find_modules(reference="U1")
-    list2 = lib.find_modules(reference="nonexistent")
-    assert lib.intersect_modules_by_reference(list1, list2) == list1
-    assert lib.intersect_modules_by_reference(list2, list1) == list1
-    assert lib.intersect_modules_by_reference(list1, list1) == list1
+    lst1 = lib.find_modules(reference="U1")
+    lst2 = lib.find_modules(reference="nonexistent")
+    assert lib.intersect_modules_by_reference(lst1, lst2) == lst1
+    assert lib.intersect_modules_by_reference(lst2, lst1) == lst1
+    assert lib.intersect_modules_by_reference(lst1, lst1) == lst1
 
 def test_module_complement():
-    list1 = lib.find_modules(reference="U.+")
-    list2 = lib.find_modules(reference="nonexistent")
-    list3 = lib.find_modules(reference="U3")
-    assert len(list1) == 3
-    assert bool(list2) is False
-    assert len(list3) == 1
-    assert lib.complement_modules_by_reference(list1, list2) == list1
-    assert lib.complement_modules_by_reference(list2, list1) == []
-    assert lib.complement_modules_by_reference(list1, list1) == []
-    c = lib.complement_modules_by_reference(list1, list3)
+    lst1 = lib.find_modules(reference="U.+")
+    lst2 = lib.find_modules(reference="nonexistent")
+    lst3 = lib.find_modules(reference="U3")
+    assert len(lst1) == 3
+    assert bool(lst2) is False
+    assert len(lst3) == 1
+    assert lib.complement_modules_by_reference(lst1, lst2) == lst1
+    assert lib.complement_modules_by_reference(lst2, lst1) == []
+    assert lib.complement_modules_by_reference(lst1, lst1) == []
+    c = lib.complement_modules_by_reference(lst1, lst3)
     assert len(c) == 2
     assert ((c[0].GetReference() == 'U2' and c[1].GetReference() == 'U1')
             or (c[0].GetReference() == 'U1' and c[1].GetReference() == 'U2'))
@@ -50,8 +50,9 @@ def test_module_pads_should_have_same_netnames_should_fail():
         lib.matching_modules_should_have_same_pads_and_netnames(reference=r'U.*')
 
 def test_module_pads_should_have_same_netnames_should_work():
-    lib.matching_modules_should_have_same_pads_and_netnames(value='LM555')
-    lib.modules_should_have_same_pads_and_netnames(value='LM555')
+    assert len(lib.find_modules(value='NA555P')) == 2
+    lib.matching_modules_should_have_same_pads_and_netnames(value='NA555P')
+    lib.modules_should_have_same_pads_and_netnames(value='NA555P')
 
 def test_find_modules_by_netname():
     l = lib.find_modules(pad_netname='CV')
@@ -66,7 +67,7 @@ def test_edge_cuts_grid_should_work():
 
 def test_module_pads_should_be_on_grid_should_fail():
     with pytest.raises(AssertionError, match=r'not on grid'):
-        lib.module_pads_should_be_on_grid("50mil", reference=r'.*')
+        lib.module_pads_should_be_on_grid("127mil", reference=r'.*')
 
 def test_module_pads_should_be_on_grid_should_work():
     lib.module_pads_should_be_on_grid("25mil", reference=r'.*')

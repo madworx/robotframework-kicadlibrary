@@ -18,7 +18,6 @@ import pcbnew
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from robot.api import logger
 
-# pylint: disable=relative-import
 from .kicad_library_utils.schlib import schlib
 from .kicad_library_utils.sch import sch
 
@@ -448,7 +447,7 @@ class KiCadLibrary(object):
 
         for mod in modlist:
             # All matching modules should have the same pin-count:
-            if mod.GetPadCount() is not len(aggregates.keys()):
+            if mod.GetPadCount() != len(aggregates.keys()):
                 ret = False
                 logger.error("Module {0} has unexpected pad count: {1} (should be {2})".
                              format(mod, mod.GetPadCount(), len(aggregates.keys())))

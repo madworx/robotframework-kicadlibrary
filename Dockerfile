@@ -14,11 +14,11 @@ LABEL org.label-schema.vcs-url="https://github.com/madworx/robotframework-kicadl
 SHELL [ "/bin/bash", "-c" ]
 
 RUN if [[ "${PYTHON_VERSION}" == 3* ]] ; then PYPKG="python3" ; KIREPO="5.1" ; else PYPKG="python" ; KIREPO="5" ; fi \
-    && echo "Adding 'ppa:ja-reynaud/kicad-${KIREPO}' with '${PYPKG}'..." \
+    && echo "Adding 'ppa:kicad/kicad-${KIREPO}-releases' with '${PYPKG}'..." \
     && apt-get -qq update < /dev/null > ${DEBUG_APT} \
     && apt-get -qq install --no-install-recommends --assume-yes software-properties-common locales make < /dev/null > ${DEBUG_APT} \
     && echo "C.UTF-8 UTF-8" > /etc/locale.gen && locale-gen \
-    && add-apt-repository -y ppa:js-reynaud/kicad-${KIREPO} < /dev/null > ${DEBUG_APT} \
+    && add-apt-repository -y ppa:kicad/kicad-${KIREPO}-releases < /dev/null > ${DEBUG_APT} \
     && dpkg --purge software-properties-common < /dev/null > ${DEBUG_APT} \
     && apt-get -qq update < /dev/null > ${DEBUG_APT} \
     && apt-get install --assume-yes --no-install-recommends "${PYPKG}" "${PYPKG}-pip"  < /dev/null > ${DEBUG_APT} \

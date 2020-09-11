@@ -10,7 +10,6 @@ addons:
     organization: madworx
 
 python:
-  - "2.7"
   - "3.7"
 
 sudo: required
@@ -28,7 +27,7 @@ script:
 deploy:
   - provider: releases
     api_key:
-      secure: e7LRwziBqApiSkXYmlMQinSZfds/ksRkbq9zsAkXPue7LY2Ew+SdmreQbiC/axducyoPMYSr7IrmvH+1QQW0ciBmmzWb1kIPi0F60+noEbwoRrn3UuF3LLSN57X67kP5fh9cnz54+DsSax+8t6ccqg/tIM5Bk9baMTXxNLh3TzxbED1O/foWSJ0SzSINSMr+4YfT/IjVQPU/1LODSwlQYbuJxgWy0Du8GvJzC5KElR0LCUkLuAS74GXm+8vcebI4cp+cOs/QLub1jPyZNSsJK41lZpUUU1VnZe9LIvML0DsBVmJg23z5gFAsf5D3fhmRKoVbCQhuidaM/Fogk57tOj+gBuucCO3GiPeE3phZfBOVDqNhr2immfho5Ves0sVNvt+yPo2gLX1S5svLP3LpsNHtTMmJ23EeyA0wHzt3YXYxkbVsLxY9OWc9HUCwVPZvB3Wr3e5OiVRHWPnKTRKteA/wdJHjYE61GJb1ppZZJDY42s1p3J1Xgm9c5v5zJ3dJe543BZ81pcbqUrAxmuMGmQdYeFVRiLmyaaMrySAewLb6PJ45ja+BNrJMOKFYdH3jiavcevglD46bN4XPWhnFkOyB28hwwMuwM0C9tfhHPLGpXhJiJIKV6diGJzPdSIlp55tKfU8IN+Ez2dRkfq8H+2FwJ1NRvlnRFW4Np3el25M=
+      secure: C1kLaMxE7K7yx4biiZednKLA5TQNUG6Rt+oqQZLCuaXuzYJi2jMYH1XENoB73cpi321NNGMEo8WqmiZDVQsN96ulv3OYDGK2VAZ6nJcM5HDDCnj04l1hUydXh3JinchY0Z4Tqn6XeOoWsg0iDrMVCxp3O/NbhHEUtmmUjzXRaBJHorEZ7vtadmik3YzZgyqSeOLlDEs9xBFbTPK2gNPYFdYK0z+va0WDPAx3H5oXGUa5Puz3v+T0ZFzqWWg6Nc55K6eBI96pzhEw1xdVO7shM0f38QaUUTI+tDw49XV4O/Q7S1u9T4Y/lZP3QqjwqdG6oG61n8gPb8b1uhP1739xnRHhKs8p9iugiYMva/+AQFr2QYp6D5GwCfCr0LB1lxzq1Xxf3vU+E4jEkvljCb64Unn0AGt9TQOINHIolT7GssYlXyFmKW5u6FnPUsROFQPsjA8z5CpDNAkJT7pakikyHKtrdpCjDk51RptQPt6qN60z//ry2MOHv0VQS7qznOl21RNCL3EGeulpN38Sb9hGUcAerbnfo1DhFTf4lUy/E9hIqLcEzDzGh7ojlanbBG3fIaVeHSr8FDFlgZYTExfb4awx+JXkjeN7y6FaKik2HUyxVt81wGXDHml734f8P/reSNVwV/FfS2JSf96crm4dMrr8MkfHL3jPsUKWfxbN+58=
     file_glob: true
     file:
       - build/KiCadLibrary*.html
