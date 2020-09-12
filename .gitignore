@@ -8,4 +8,6 @@ report.html
 **/*.kicad_pcb-bak
 **/*.sch-bak
 .eggs
+**/*.egg-info
+build/
 
