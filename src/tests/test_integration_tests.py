@@ -2,6 +2,7 @@
 
 from robot import run_cli
 
+
 def test_run_integration_tests():
     if not run_cli(['-F', 'robot',
                     '-o', 'NONE',

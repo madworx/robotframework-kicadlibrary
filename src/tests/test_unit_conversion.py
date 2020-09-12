@@ -6,9 +6,11 @@ from KiCadLibrary import KiCadLibrary
 
 lib = None
 
+
 def setup_function(function):
     global lib
     lib = KiCadLibrary()
+
 
 def test_parse_dimstr():
     """Valid dimension defintions should work, and return the expected
@@ -18,6 +20,7 @@ def test_parse_dimstr():
     assert int(lib._parse_dimension_string('3.14mm')) == 3.14e6
     assert int(lib._parse_dimension_string('3.14 mm')) == 3.14e6
     assert int(lib._parse_dimension_string('3.14')) == 3.14e6
+
 
 def test_parse_invalid_dimstr_should_fail():
     """Invalid dimension defintions should fail"""
