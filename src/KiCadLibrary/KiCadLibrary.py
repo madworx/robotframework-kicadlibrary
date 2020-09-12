@@ -680,6 +680,7 @@ class KiCadLibrary(object):
             raise AssertionError(f"Unable to grok rotation [{rotation}].")
         return [posx, posy]
 
+    # pylint: disable=fixme,too-many-locals,too-many-nested-blocks
     def _return_unconnected_pins(self):
         checked_components = 0
         checked_pins = 0
@@ -688,9 +689,9 @@ class KiCadLibrary(object):
         ret['data'] = {}
 
         # Only accept nets which have more than one connection.
-        viable_nets = set([str(net) for net in self.board.GetNetsByName()
+        viable_nets = {str(net) for net in self.board.GetNetsByName()
                            if self.board.GetNodesCount(
-                              int(self.board.FindNet(str(net)).GetNet())) > 1])
+                              int(self.board.FindNet(str(net)).GetNet())) > 1}
 
         # TODO: Handle all schemas
         s = self.schemas['_root']
@@ -737,6 +738,7 @@ class KiCadLibrary(object):
         ret['stats']['checked_pins'] = checked_pins
         return ret
 
+    # pylint: disable=missing-function-docstring
     def module_pins_should_be_connected(self):
         data = self._return_unconnected_pins()
         logger.info(f"Checked {data['stats']['checked_components']} components"
