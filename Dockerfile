@@ -4,7 +4,6 @@ FROM ubuntu:bionic AS embryo
 
 MAINTAINER Martin Kjellstrand [https://www.github.com/madworx]
 
-ARG PYTHON_VERSION
 ARG VCS_REF
 ARG DEBUG_APT
 LABEL org.label-schema.vcs-url="https://github.com/madworx/robotframework-kicadlibrary/" \
@@ -13,16 +12,16 @@ LABEL org.label-schema.vcs-url="https://github.com/madworx/robotframework-kicadl
 
 SHELL [ "/bin/bash", "-c" ]
 
-RUN if [[ "${PYTHON_VERSION}" == 3* ]] ; then PYPKG="python3" ; KIREPO="5.1" ; else PYPKG="python" ; KIREPO="5" ; fi \
-    && echo "Adding 'ppa:kicad/kicad-${KIREPO}-releases' with '${PYPKG}'..." \
+# We do all add/remove operations in one RUN statement to save
+# on number of layers as well as image total size.
+RUN echo "Adding 'ppa:kicad/kicad-5.1-releases' with 'python3'..." \
     && apt-get -qq update < /dev/null > ${DEBUG_APT} \
     && apt-get -qq install --no-install-recommends --assume-yes software-properties-common locales make < /dev/null > ${DEBUG_APT} \
     && echo "C.UTF-8 UTF-8" > /etc/locale.gen && locale-gen \
-    && add-apt-repository -y ppa:kicad/kicad-${KIREPO}-releases < /dev/null > ${DEBUG_APT} \
+    && add-apt-repository -y ppa:kicad/kicad-5.1-releases < /dev/null > ${DEBUG_APT} \
     && dpkg --purge software-properties-common < /dev/null > ${DEBUG_APT} \
     && apt-get -qq update < /dev/null > ${DEBUG_APT} \
-    && apt-get install --assume-yes --no-install-recommends "${PYPKG}" "${PYPKG}-pip"  < /dev/null > ${DEBUG_APT} \
-    && if [[ "${PYTHON_VERSION}" == 3* ]] ; then ln -sf python3 /usr/bin/python ; ln -sf pip3 /usr/bin/pip ; fi \
+    && apt-get install --assume-yes --no-install-recommends "python3" "python3-pip"  < /dev/null > ${DEBUG_APT} \
     && apt-get install -qq --assume-yes --no-install-recommends kicad kicad-symbols kicad-footprints < /dev/null > ${DEBUG_APT} \
     && apt-get autoremove -y < /dev/null > ${DEBUG_APT} \
     && apt-get update -o'Dir::Etc::SourceList=/dev/null' -o'Dir::Etc::SourceParts=/tmp' \
@@ -43,7 +42,7 @@ RUN if [ -z "${KICADLIBRARY_VERSION}" ] ; then \
     ; fi
 
 RUN echo "Installing setuptools into build environment..." \
-    && pip install setuptools setuptools_scm wheel
+    && pip3 install setuptools setuptools_scm wheel
 
 COPY . /build
 WORKDIR /build
@@ -56,9 +55,11 @@ RUN sed -e "s#'setuptools_scm', ##g" \
 
 # Run unit-tests and build wheel.
 RUN make dist doc
-RUN pip install dist/*.whl
+RUN pip3 install dist/*.whl
 
-# Run integration tests
+# Run integration tests. (integration testing is already performed by the
+# unit-test harness, but this servers as a double-check that the "robot" 
+# command performs as expected.)
 RUN cd examples \
     && for DIR in * ; do \
        ( cd "${DIR}" && robot . ) \
@@ -73,7 +74,7 @@ COPY --from=build \
      /build/build/nosetests.xml \
      /build/
 
-RUN pip install /build/*.whl
+RUN pip3 install /build/*.whl
 RUN useradd --base-dir / \
             --system \
             --user-group \

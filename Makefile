@@ -1,5 +1,4 @@
 SHELL = bash
-PYTHON_VERSION = 3
 
 all: tests doc
 
@@ -14,8 +13,7 @@ dist: clean tests
 docker:
 	export KICADLIBRARY_VERSION="$$(python3 setup.py --get-version)" ; \
 	export VCS_REF="$$(git rev-parse --short HEAD)" ; \
-	export PYTHON_VERSION=$(PYTHON_VERSION) ; \
-	docker build -t "madworx/robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION --build-arg=VCS_REF --build-arg=PYTHON_VERSION .
+	docker build -t "madworx/robotframework-kicadlibrary:$${KICADLIBRARY_VERSION/+/-}" --build-arg=KICADLIBRARY_VERSION --build-arg=VCS_REF .
 
 docker-extract-artifacts:
 	export KICADLIBRARY_VERSION="$$(python3 setup.py --get-version)" ; \

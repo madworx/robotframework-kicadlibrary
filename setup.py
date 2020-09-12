@@ -31,7 +31,7 @@ setup(name='robotframework-kicadlibrary',
                 'KiCadLibrary.kicad_library_utils.schlib'],
       package_dir={'': 'src'},
       install_requires=['robotframework<4', 'natsort'],
-      setup_requires=['setuptools_scm', 'robotframework<4'] + pytest_runner,
+      setup_requires=['setuptools_scm', 'robotframework<4', 'natsort'] + pytest_runner,
       tests_require=['pytest-runner', 'pytest-cov', 'pytest-mock', 'coverage',
                      'pytest-pylint', 'pytest-html', 'setuptools_scm',
                      'robotframework<4', 'mock', 'natsort'] +

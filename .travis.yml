@@ -18,8 +18,8 @@ before_install:
   - pip install setuptools_scm
 
 script:
-  - PYTHON_VERSION="${TRAVIS_PYTHON_VERSION}" make docker
-  - PYTHON_VERSION="${TRAVIS_PYTHON_VERSION}" make docker-extract-artifacts
+  - make docker
+  - make docker-extract-artifacts
   - mkdir dist && cp build/*.tar.gz build/*.whl ./dist/
   - export TAGGED_VERSION=$(git describe --exact-match HEAD 2>/dev/null)
   - sonar-scanner $([[ ! -z "${TAGGED_VERSION}" ]] && echo "-Dsonar.projectVersion=${TAGGED_VERSION}")
