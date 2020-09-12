@@ -7,5 +7,5 @@ report.html
 **/*-cache.lib
 **/*.kicad_pcb-bak
 **/*.sch-bak
-
+.eggs
 
