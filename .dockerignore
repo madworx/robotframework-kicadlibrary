@@ -1,7 +1,5 @@
 .eggs
-build
 dist
 .pytest_cache
 docs
-Dockerfile
 *~

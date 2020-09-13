@@ -70,8 +70,7 @@ COPY --from=build \
      /build/dist/*.whl \
      /build/dist/*.tar.gz \
      /build/docs/*.html \
-     /build/build/coverage.xml \
-     /build/build/nosetests.xml \
+     /build/build \
      /build/
 
 RUN pip3 install /build/*.whl
