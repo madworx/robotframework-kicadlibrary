@@ -9,6 +9,9 @@ addons:
   sonarcloud:
     organization: madworx
 
+git:
+  depth: false
+
 python:
   - "3.7"
 
