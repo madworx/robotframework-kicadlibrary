@@ -743,10 +743,11 @@ class KiCadLibrary(object):
         data = self._return_unconnected_pins()
         logger.info(f"Checked {data['stats']['checked_components']} components"
                     f" and {data['stats']['checked_pins']} component pins.")
-        for ref in natsorted(data['data']):
-            for pin in sorted(data['data'][ref]):
-                logger.error(f"Component {ref} pin {pin} is not connected.")
-        logger.error(data)
+        if data['data']:
+            for ref in natsorted(data['data']):
+                for pin in sorted(data['data'][ref]):
+                    logger.error(f"Component {ref} pin {pin} is not connected.")
+            raise AssertionError("Components had unconnected pins.")
         return data
 
     def _parse_dimension_string(self, string):

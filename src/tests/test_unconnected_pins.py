@@ -2,6 +2,7 @@
 # pylint: disable=missing-docstring,invalid-name
 import os
 
+import pytest
 from KiCadLibrary import KiCadLibrary
 
 lib = None
@@ -34,3 +35,9 @@ def test_get_list_of_unconnected():
     for c in data['data']:
         assert len(data['data'][c]) == 1
         assert data['data'][c][0] == 1
+
+
+def test_keyword_stub():
+    with pytest.raises(AssertionError,
+                       match=r'Components had unconnected pins.'):
+        lib.module_pins_should_be_connected()
