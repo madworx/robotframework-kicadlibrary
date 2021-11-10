@@ -4,7 +4,7 @@
 
 [![Build history](https://buildstats.info/travisci/chart/madworx/robotframework-kicadlibrary?branch=master)](https://travis-ci.org/madworx/robotframework-kicadlibrary/builds)
 
-A [Robot Framework](http://robotframework.org/) library for validating [KiCad](http://kicad-pcb.org/) designs.
+A [Robot Framework](http://robotframework.org/) library for validating [KiCad](http://kicad.org/) designs.
 
 Releases are available via regular [PyPI](https://pypi.org/project/robotframework-kicadlibrary/) as well as [GitHib releases](https://github.com/madworx/robotframework-kicadlibrary/releases). Example projects/usage is available under the `examples/` sub-directory.
 
